@@ -1,0 +1,20 @@
+{
+  "manifest_version": 2,
+  "name": "Disengaged",
+  "version": "0.1.0",
+  "description": "The internet sux rn so I deleted the bad parts",
+  "icons": {
+    "48": "icons/disengaged-48.png"
+  },
+  "applications": {
+    "gecko": {
+      "id": "disengaged@a13o.com"
+    }
+  },
+  "content_scripts": [
+    {
+      "matches": ["*://*.news.ycombinator.com/*"],
+      "js": [ "src/hacker-news.js"]
+    }
+  ]
+}
