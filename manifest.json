@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "Disengaged",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "The internet sux rn so I deleted the bad parts",
   "icons": {
     "48": "icons/disengaged-48.png"
@@ -14,7 +14,14 @@
   "content_scripts": [
     {
       "matches": ["*://*.news.ycombinator.com/*"],
-      "js": [ "src/hacker-news.js"]
+      "js": [
+        "src/hacker-news/remove-self-karma-count.js",
+        "src/hacker-news/remove-comment-count.js",
+        "src/hacker-news/remove-comment-points.js",
+        "src/hacker-news/remove-post-points.js",
+        "src/hacker-news/collapse-comments.js",
+        "src/hacker-news/hide-low-quality-comments.js"
+      ]
     }
   ]
 }
