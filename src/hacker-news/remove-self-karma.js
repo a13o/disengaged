@@ -1,7 +1,7 @@
 /**
- * Remove the logged in user's karma count from the page header
+ * Remove the logged in user's karma from the page header
  */
-(function removeSelfKarmaCount () {
+(function removeSelfKarma () {
   const self = document.querySelector('a#me')
   if (!self) return
 

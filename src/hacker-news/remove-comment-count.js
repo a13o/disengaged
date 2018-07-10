@@ -3,6 +3,6 @@
  */
 (function removeCommentCount () {
   document.querySelectorAll('td.subtext > a:last-child').forEach((comments) => {
-    comments.innerHTML = comments.innerHTML.replace(/\d+/, '')
+    comments.innerHTML = comments.text.replace(/\d+\s/, '')
   })
 })()

@@ -15,12 +15,13 @@
     {
       "matches": ["*://*.news.ycombinator.com/*"],
       "js": [
-        "src/hacker-news/remove-self-karma-count.js",
-        "src/hacker-news/remove-comment-count.js",
-        "src/hacker-news/remove-comment-points.js",
-        "src/hacker-news/remove-post-points.js",
         "src/hacker-news/collapse-comments.js",
-        "src/hacker-news/hide-low-quality-comments.js"
+        "src/hacker-news/remove-comment-count.js",
+        "src/hacker-news/remove-comment-karma.js",
+        "src/hacker-news/remove-low-quality-comments.js",
+        "src/hacker-news/remove-post-karma.js",
+        "src/hacker-news/remove-profile-karma.js",
+        "src/hacker-news/remove-self-karma.js"
       ]
     }
   ]

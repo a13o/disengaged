@@ -8,7 +8,7 @@
  * setting the depth to 2.
  * @type {number}
  */
-const COMMENT_COLLAPSE_DEPTH = 2;
+const COMMENT_COLLAPSE_DEPTH = 1;
 
 /**
  * Collapse all comments starting at a certain depth. 0-indexed

@@ -1,8 +1,8 @@
 /**
- * Remove point totals next to comments (typically seen next to your own comments when
+ * Remove karma totals next to comments (typically seen next to your own comments when
  * logged in)
  */
-(function removeCommentPoints () {
+(function removeCommentKarma () {
   document.querySelectorAll('span[id^="score_"]').forEach((score) => {
     const parent = score.parentNode
     parent.removeChild(score.nextSibling)
