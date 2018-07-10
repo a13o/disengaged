@@ -4,8 +4,6 @@
  * 1 = collapse everything after direct replies
  * 2 = collapse after replies to replies
  * etc.
- * Since Hacker News has a more mature userbase and strict moderation we will try
- * setting the depth to 2.
  * @type {number}
  */
 const COMMENT_COLLAPSE_DEPTH = 1;
@@ -14,7 +12,7 @@ const COMMENT_COLLAPSE_DEPTH = 1;
  * Collapse all comments starting at a certain depth. 0-indexed
  * @type {Number} depth
  */
-(function collapseComments (depth) {
+(function collapseDeepComments (depth) {
   document.querySelectorAll('tr.athing.comtr').forEach((comment) => {
     // already collapsed? nothing to do
     if (comment.classList.contains('coll')) return
