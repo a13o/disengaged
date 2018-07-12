@@ -8,38 +8,28 @@ Some netizens respond to this by installing Ad Blockers, which treat the symptom
 
 # Code of Ethics
 
-## I. Respect visitors' time
+### A. Each page should have a single, clear objective.
 
-The guidelines in this section aim to reduce the commonly measured time-on-site metric. Time-on-site, when treated as a business objective, artificially elongates visits by promoting and re-enforcing addictive behavior.
+1. Leaf pages should not link to other leaf pages unless they are reference material for the current page. Instead, encourage visitors to return to a directory page where they can select a new topic. If your sitemap would look like a fractal pattern, you're probably breaking this rule.
 
-### A. Each page on your site should have a single, clear objective. 
+   > ❌ Dark-pattern: A New York Times article contains a section at the bottom suggesting trending articles for the visitor to read. The trending articles have no direct relationship to the current article.
 
-1. Leaf pages should not link to other leaf pages unless they are reference material for the current page. Instead, encourage visitors to return to a directory page where they can select a new topic.
-
-   > ❌ Dark-pattern: An article on a news site contains a section at the bottom suggesting more articles for the visitor to read. The other articles are only related through metadata such as author, publish date, category, or keyword and are not reference material for the current article.
-
-   > ❌ Dark-pattern: After watching a video on Youtube, similar videos are recommended based on metadata from the first video.
+   > ❌ Dark-pattern: After watching a video on Youtube, similar videos are recommended. These recommendations are made using metadata such as topic, author, or keyword matching and do not constitute a direct relationship with the original video.
 
    > 👌 A Wikipedia entry about lightbulbs covers their invention, linking to Thomas Edison's entry.
 
-### B. User-contributed commentary should focus on quality over quantity.
-
-1. Prune comment threads fiercely to keep them on-topic.
+1. Comment threads should be a shorter read than the material they're commenting on. Comment threads have incredibly low information density and quickly veer off topic. They will grow boundlessly and overshadow your main content.
 
    > ❌ Dark-pattern: The best rated reply of a Hacker News thread has 100 sub-replies, which are all shown before the second best rated reply.
 
    > 👌 The comments at the bottom of a Kotaku blog post are hidden by default until approved by a moderator.
 
-1. When a comment is pruned, remove the entire branch.
+### B. Visitors should make decisions free from social influence.
 
-    > ❌ Dark-pattern: A comment on a Reddit thread is deleted by a moderator but the replies to that comment remain. These replies no longer have any value without their parent and make it possible to get the gist of the deleted comment, which undermines the deletion.
+1. Do not publish vanity metrics about visitors or content. These may cause visitors to join a rat race or engage with content just to see what the fuss is about.
 
-## II. Respect visitors' agency
+   > ❌ Dark-pattern: A karma count is displayed in the site header at the top of every Reddit page.
 
-The guidelines in this section aim to reduce user behaviors that have been extrinsically motivated for the website's benefit, but not the user's.
+   > ❌ Dark-pattern: Twitter prominently displays a like count and a retweet count on every tweet.
 
-### A. User profiles should not track vanity stats.
-
-1. Karma counts should never be seen by visitors.
-
-   > ❌ Dark-pattern: Karma count is displayed in the site header at the top of every Reddit page, reminding you that your every action is to be measured against other visitors
+   > ❌ Dark-pattern: The Washington Post tells you how many comments are in a thread
