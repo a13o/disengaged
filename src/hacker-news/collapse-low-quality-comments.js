@@ -1,5 +1,6 @@
 /**
  * Collapse all comments HN has already deemed lower quality
+ * @see A.2
  */
 (function collapseLowQualityComments () {
   document.querySelectorAll('tr.athing.comtr').forEach((comment) => {

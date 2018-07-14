@@ -1,5 +1,6 @@
 /**
  * Remove the logged in user's karma from the page header
+ * @see B.1
  */
 (function removeSelfKarma () {
   const self = document.querySelector('a#me')

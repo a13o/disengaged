@@ -10,6 +10,7 @@ const COMMENT_COLLAPSE_DEPTH = 1;
 
 /**
  * Collapse all comments starting at a certain depth. 0-indexed
+ * @see A.2
  * @type {Number} depth
  */
 (function collapseDeepComments (depth) {

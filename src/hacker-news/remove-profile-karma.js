@@ -1,5 +1,6 @@
 /**
  * Remove karma count from user profiles
+ * @see B.1
  */
 (function removeProfileKarma () {
   document.querySelectorAll('td[valign="top"]').forEach((td) => {

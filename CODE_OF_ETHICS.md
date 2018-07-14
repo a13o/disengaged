@@ -18,18 +18,18 @@ Some netizens respond to this by installing Ad Blockers, which treat the symptom
 
    > 👌 A Wikipedia entry about lightbulbs covers their invention, linking to Thomas Edison's entry.
 
-1. Comment threads should be a shorter read than the material they're commenting on. Comment threads have incredibly low information density and quickly veer off topic. They will grow boundlessly and overshadow your main content.
+2. Comment threads should be a shorter read than the material they're commenting on. Comment threads have incredibly low information density and quickly veer off topic. They will grow boundlessly and overshadow your main content.
 
-   > ❌ Dark-pattern: The best rated reply of a Hacker News thread has 100 sub-replies, which are all shown before the second best rated reply.
+   > ❌ Dark-pattern: The best rated reply to an entry on Hacker News has 100 sub-replies, which are all shown before the second best rated reply.
 
    > 👌 The comments at the bottom of a Kotaku blog post are hidden by default until approved by a moderator.
 
 ### B. Visitors should make decisions free from social influence.
 
-1. Do not publish vanity metrics about visitors or content. These may cause visitors to join a rat race or engage with content just to see what the fuss is about.
+1. Do not publish vanity metrics about visitors or content. These may cause visitors to start comparing themselves or engage with content just to see what the fuss is about.
 
    > ❌ Dark-pattern: A karma count is displayed in the site header at the top of every Reddit page.
 
    > ❌ Dark-pattern: Twitter prominently displays a like count and a retweet count on every tweet.
 
-   > ❌ Dark-pattern: The Washington Post tells you how many comments are in a thread
+   > ❌ Dark-pattern: The Washington Post tells you how many comments are in a thread.
