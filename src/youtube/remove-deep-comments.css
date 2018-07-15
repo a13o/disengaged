@@ -1,0 +1,9 @@
+/**
+ * Remove all comments except direct comments
+ * @see A.2
+ */
+
+ytd-expander.ytd-comment-replies-renderer
+{
+  display: none !important;
+}

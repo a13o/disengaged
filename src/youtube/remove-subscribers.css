@@ -1,0 +1,20 @@
+/**
+ * Remove subscriber counts
+ * @see B.1
+ */
+
+/* Channel browser  */
+a#channel-info span#thumbnail-attribution,
+
+/* Subscribe buttons */
+div#subscribe-button paper-button span.deemphasize,
+
+/* Search results */
+span#subscribers,
+
+/* Channel page */
+#subscriber-count
+
+{
+  display: none !important;
+}

@@ -1,0 +1,14 @@
+/**
+ * Remove like and dislike counts
+ * @see B.1
+ */
+
+/* Current video details */
+yt-formatted-string#text[aria-label$="likes"],
+
+/* Comments */
+span#vote-count-middle
+
+{
+  display: none !important;
+}

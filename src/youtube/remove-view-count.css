@@ -1,0 +1,14 @@
+/**
+ * Remove view counts
+ * @see B.1
+ */
+
+/* Thumbnails */
+div#metadata-line > span:first-child,
+
+/* Current video details */
+span.view-count
+
+{
+  display: none !important;
+}
