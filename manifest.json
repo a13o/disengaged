@@ -26,6 +26,7 @@
     },
     {
       "matches": ["*://*.youtube.com/*"],
+      "all_frames": true,
       "css": [
         "src/youtube/remove-deep-comments.css",
         "src/youtube/remove-subscribers.css",

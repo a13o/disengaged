@@ -7,7 +7,10 @@
 div#metadata-line > span:first-child,
 
 /* Current video details */
-span.view-count
+span.view-count,
+
+/* Embedded video iframe */
+span.ytp-title-subtitle
 
 {
   display: none !important;
