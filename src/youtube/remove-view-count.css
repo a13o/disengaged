@@ -10,7 +10,10 @@ div#metadata-line > span:first-child,
 span.view-count,
 
 /* Embedded video iframe */
-span.ytp-title-subtitle
+span.ytp-title-subtitle,
+
+/* Channel about page */
+div#right-column yt-formatted-string.ytd-channel-about-metadata-renderer:last-of-type
 
 {
   display: none !important;

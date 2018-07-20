@@ -13,7 +13,10 @@ div#subscribe-button paper-button span.deemphasize,
 span#subscribers,
 
 /* Channel page */
-#subscriber-count
+#subscriber-count,
+
+/* Video hover */
+.ytp-sb-count
 
 {
   display: none !important;
