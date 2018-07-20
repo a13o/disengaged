@@ -35,7 +35,8 @@
       ],
       "js": [
         "src/youtube/remove-comment-count.js",
-        "src/youtube/remove-infinite-comments.js"
+        "src/youtube/remove-infinite-comments.js",
+        "src/youtube/remove-view-count.js"
       ]
     }
   ]
