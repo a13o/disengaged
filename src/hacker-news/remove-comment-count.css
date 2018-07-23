@@ -1,0 +1,25 @@
+/**
+ * Remove the count from the comments link on each post
+ * @see B.1
+ */
+
+td.subtext > a:last-child
+{
+  position: relative;
+  visibility: hidden;
+}
+
+td.subtext > a:last-child::after
+{
+  /** HN displays "discuss" when there are 0 comments */
+  content: "discuss";
+  position: absolute;
+  visibility: visible;
+  left: 0;
+  top: 0;
+}
+
+td.subtext > a:last-child:hover::after
+{
+  text-decoration: underline;
+}

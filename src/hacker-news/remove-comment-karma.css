@@ -1,0 +1,11 @@
+/**
+ * Remove karma totals next to comments
+ * @see B.1
+ */
+
+/* Next to your own posts */
+span[id^="score_"]
+
+{
+  display: none !important;
+}

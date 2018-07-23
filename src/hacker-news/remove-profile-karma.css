@@ -1,0 +1,10 @@
+/**
+ * Remove karma count from user profiles
+ * @see B.1
+ */
+
+.profileform tr:nth-child(3)
+
+{
+  display: none !important;
+}

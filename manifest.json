@@ -14,13 +14,15 @@
   "content_scripts": [
     {
       "matches": ["*://*.news.ycombinator.com/*"],
+      "css": [
+        "src/hacker-news/remove-comment-count.css",
+        "src/hacker-news/remove-comment-karma.css",
+        "src/hacker-news/remove-post-karma.css",
+        "src/hacker-news/remove-profile-karma.css"
+      ],
       "js": [
         "src/hacker-news/collapse-deep-comments.js",
         "src/hacker-news/collapse-low-quality-comments.js",
-        "src/hacker-news/remove-comment-count.js",
-        "src/hacker-news/remove-comment-karma.js",
-        "src/hacker-news/remove-post-karma.js",
-        "src/hacker-news/remove-profile-karma.js",
         "src/hacker-news/remove-self-karma.js"
       ]
     },
