@@ -31,6 +31,7 @@
       "all_frames": true,
       "css": [
         "src/youtube/remove-deep-comments.css",
+        "src/youtube/remove-live-views.css",
         "src/youtube/remove-subscribers.css",
         "src/youtube/remove-view-count.css",
         "src/youtube/remove-votes.css"

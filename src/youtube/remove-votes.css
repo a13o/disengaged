@@ -7,7 +7,10 @@
 yt-formatted-string#text[aria-label$="likes"],
 
 /* Comments */
-span#vote-count-middle
+span#vote-count-middle,
+
+/* Youtub eGaming current video details */
+span.ytg-like-widget
 
 {
   display: none !important;

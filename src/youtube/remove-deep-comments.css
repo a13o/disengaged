@@ -3,7 +3,12 @@
  * @see A.2
  */
 
-ytd-expander.ytd-comment-replies-renderer
+/* video page */
+ytd-expander.ytd-comment-replies-renderer,
+
+/* Youtube Gaming playlist */
+button.ytg-comment-replies-renderer
+
 {
   display: none !important;
 }

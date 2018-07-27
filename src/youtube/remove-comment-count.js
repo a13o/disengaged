@@ -6,6 +6,8 @@
  */
 (function removeCommentCount () {
   const ytApp = document.querySelector('ytd-app')
+  if (!ytApp) { return }
+
   const observer = new MutationObserver(() => {
     const count = document.querySelector('ytd-comments-header-renderer h2#count .count-text')
     if (!count) { return }

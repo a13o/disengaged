@@ -1,0 +1,17 @@
+/**
+ * Remove live view counts
+ * @see B.1
+ */
+
+/* Game page details */
+h3.ytg-gaming-header-renderer,
+
+/* Live stream carousel */
+#metadata-badges ytg-live-badge-renderer
+
+/* Youtube Gaming homepage main carousel */
+#video-metadata .live-text
+
+{
+  display: none !important;
+}
