@@ -26,7 +26,10 @@ div#stats yt-formatted-string:nth-child(2),
 #details .headline .viewer-count,
 
 /* Youtube Gaming homepage main carousel */
-#video-metadata .small:last-child
+#video-metadata .small:last-child,
+
+/* Youtube Music player controls */
+.ytmusic-player-bar.complex-string:last-of-type
 
 {
   display: none !important;
