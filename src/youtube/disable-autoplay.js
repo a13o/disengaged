@@ -14,8 +14,11 @@
   let f5Idx = prefs.findIndex((pref) => {
     return pref.includes('f5')
   })
-  if (f5Idx === -1) { f5Idx = prefs.length }
 
+  // Early exit if it's already set
+  if (f5Idx >= 0 && prefs[f5Idx].split('=')[1] === '30000') { return }
+
+  if (f5Idx === -1) { f5Idx = prefs.length }
   prefs[f5Idx] = 'f5=30000'
 
   const twoYrs = 2 * 365 * 24 * 60 * 60 // in seconds
