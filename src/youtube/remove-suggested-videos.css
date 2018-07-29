@@ -1,0 +1,14 @@
+/**
+ * Remove suggested videos
+ * @see A.1
+ */
+
+/* End of video */
+.videowall-endscreen,
+
+/* Suggested videos on the right */
+ytd-watch-next-secondary-results-renderer
+
+{
+  display: none !important;
+}
