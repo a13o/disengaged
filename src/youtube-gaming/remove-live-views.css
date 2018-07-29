@@ -1,0 +1,11 @@
+/**
+ * Remove live view counts
+ * @see B.1
+ */
+
+/* Youtube Gaming homepage main carousel */
+#video-metadata .live-text
+
+{
+  display: none !important;
+}

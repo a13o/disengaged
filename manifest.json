@@ -28,6 +28,10 @@
     },
     {
       "matches": ["*://*.youtube.com/*"],
+      "exclude_matches": [
+        "*://*.gaming.youtube.com/*",
+        "*://*.music.youtube.com/*"
+      ],
       "all_frames": true,
       "css": [
         "src/youtube/remove-deep-comments.css",
@@ -41,6 +45,31 @@
         "src/youtube/remove-comment-count.js",
         "src/youtube/remove-infinite-comments.js",
         "src/youtube/remove-view-count.js"
+      ]
+    },
+    {
+      "matches": ["*://*.gaming.youtube.com/*"],
+      "all_frames": true,
+      "css": [
+        "src/youtube-gaming/remove-deep-comments.css",
+        "src/youtube-gaming/remove-live-views.css",
+        "src/youtube-gaming/remove-view-count.css",
+        "src/youtube-gaming/remove-votes.css"
+      ],
+      "js": [
+        "src/youtube-gaming/remove-infinite-comments.js"
+      ]
+    },
+    {
+      "matches": [
+        "*://*.music.youtube.com/*"
+      ],
+      "all_frames": true,
+      "css": [
+        "src/youtube-music/remove-view-count.css"
+      ],
+      "js": [
+        "src/youtube-music/remove-view-count.js"
       ]
     }
   ]

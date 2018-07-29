@@ -4,13 +4,10 @@
  */
 
 /* Current video details */
-yt-formatted-string#text[aria-label$="likes"],
+yt-formatted-string#text[aria-label],
 
 /* Comments */
-span#vote-count-middle,
-
-/* Youtub eGaming current video details */
-span.ytg-like-widget
+span#vote-count-middle
 
 {
   display: none !important;
