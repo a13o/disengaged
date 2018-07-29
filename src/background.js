@@ -74,6 +74,9 @@ browser.browserAction.onClicked.addListener(() => {
 })
 
 function updateIcon () {
+  // Mobile Firefox doesn't support setIcon
+  if (!browser.browserAction.setIcon) { return }
+
   browser.browserAction.setIcon({
     path: isEnabled ? 'icons/icon_48_on.png' : 'icons/icon_48_off.png'
   })

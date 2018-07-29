@@ -12,7 +12,8 @@ If you're interested in learning more about addiction dark-patterns, check out o
 
 Disengaged is still in early development. I've only been testing with Firefox.
 
-[Install Firefox Add-on](https://addons.mozilla.org/en-US/firefox/addon/disengaged/)
+[Install Firefox Add-on](https://addons.mozilla.org/en-US/firefox/addon/disengaged/) (Requires: Firefox 59 / Firefox on Android 59)
+
 
 ## Getting involved
 

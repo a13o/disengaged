@@ -1,8 +1,10 @@
 {
   "manifest_version": 2,
-  "name": "Disengaged",
-  "version": "0.1.1",
+  "name": "Disengaged - an Attention Blocker",
+  "short_name": "Disengaged",
+  "version": "0.1.2",
   "description": "The internet sux rn so I deleted the bad parts",
+  "homepage_url": "https://github.com/a13o/disengaged",
   "icons": {
     "48": "icons/icon_48_on.png",
     "96": "icons/icon_96_on.png"
