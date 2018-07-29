@@ -10,10 +10,14 @@ If you're interested in learning more about addiction dark-patterns, check out o
 
 ## Installation
 
-Disengaged is still in early development. Please clone the repo and manually add it as a developer extension to your browser if you want to try it out.
+Disengaged is still in early development. I've only been testing with Firefox.
 
-In the near future web store installation links will live here.
+[Install Firefox Add-on](https://addons.mozilla.org/en-US/firefox/addon/disengaged/)
 
 ## Getting involved
 
 Read [CONTRIBUTING](CONTRIBUTING.md) for detailed info; and thank you!
+
+## Special thanks
+
+Disengaged's icon is copyright (c) 2010 - 2018 [Kenney](kenney.nl).
