@@ -20,4 +20,4 @@ Read [CONTRIBUTING](CONTRIBUTING.md) for detailed info; and thank you!
 
 ## Special thanks
 
-Disengaged's icon is copyright (c) 2010 - 2018 [Kenney](kenney.nl).
+Disengaged's icon is copyright (c) 2010 - 2018 [Kenney](https://kenney.nl).
