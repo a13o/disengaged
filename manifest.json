@@ -4,74 +4,23 @@
   "version": "0.1.1",
   "description": "The internet sux rn so I deleted the bad parts",
   "icons": {
-    "48": "icons/disengaged-48.png"
+    "48": "icons/icon_48_on.png",
+    "96": "icons/icon_96_on.png"
   },
   "applications": {
     "gecko": {
       "id": "disengaged@a13o.com"
     }
   },
-  "content_scripts": [
-    {
-      "matches": ["*://*.news.ycombinator.com/*"],
-      "css": [
-        "src/hacker-news/remove-comment-count.css",
-        "src/hacker-news/remove-comment-karma.css",
-        "src/hacker-news/remove-post-karma.css",
-        "src/hacker-news/remove-profile-karma.css"
-      ],
-      "js": [
-        "src/hacker-news/collapse-deep-comments.js",
-        "src/hacker-news/collapse-low-quality-comments.js",
-        "src/hacker-news/remove-self-karma.js"
-      ]
-    },
-    {
-      "matches": ["*://*.youtube.com/*"],
-      "exclude_matches": [
-        "*://*.gaming.youtube.com/*",
-        "*://*.music.youtube.com/*"
-      ],
-      "all_frames": true,
-      "css": [
-        "src/youtube/remove-deep-comments.css",
-        "src/youtube/remove-live-views.css",
-        "src/youtube/remove-subscribers.css",
-        "src/youtube/remove-view-count.css",
-        "src/youtube/remove-suggested-videos.css",
-        "src/youtube/remove-votes.css"
-      ],
-      "js": [
-        "src/youtube/disable-autoplay.js",
-        "src/youtube/remove-comment-count.js",
-        "src/youtube/remove-infinite-comments.js",
-        "src/youtube/remove-suggested-videos.js"
-      ]
-    },
-    {
-      "matches": ["*://*.gaming.youtube.com/*"],
-      "all_frames": true,
-      "css": [
-        "src/youtube-gaming/remove-deep-comments.css",
-        "src/youtube-gaming/remove-live-views.css",
-        "src/youtube-gaming/remove-view-count.css",
-        "src/youtube-gaming/remove-votes.css"
-      ],
-      "js": [
-        "src/youtube-gaming/remove-infinite-comments.js"
-      ]
-    },
-    {
-      "matches": [
-        "*://*.music.youtube.com/*"
-      ],
-      "all_frames": true,
-      "css": [
-        "src/youtube-music/remove-view-count.css"
-      ],
-      "js": [
-        "src/youtube-music/remove-view-count.js"
-      ]
-    }
+  "browser_action": {
+    "default_icon": "icons/icon_48_on.png",
+    "default_title": "Disengaged - Attention Blocker"
+  },
+  "background": {
+    "scripts": ["src/background.js"]
+  },
+  "permissions": [
+    "*://*.news.ycombinator.com/*",
+    "*://*.youtube.com/*"
   ]
 }
