@@ -12,7 +12,7 @@
     const count = document.querySelector('ytd-comments-header-renderer h2#count .count-text')
     if (!count) { return }
 
-    count.innerHTML = count.textContent.replace(/[\d,]+\s/, '')
+    count.textContent = count.textContent.replace(/[\d,]+\s/, '')
 
     observer.disconnect()
   })

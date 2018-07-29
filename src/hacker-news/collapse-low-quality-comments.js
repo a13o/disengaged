@@ -16,7 +16,7 @@
       // set all of hn's classes for the collapsed comment
       comment.classList.add('coll')
       const toggle = comment.querySelector('.togg')
-      toggle.innerHTML = `[+${toggle.getAttribute('n')}]`
+      toggle.textContent = `[+${toggle.getAttribute('n')}]`
       comment.querySelector('.comment').classList.add('noshow')
       comment.querySelector('.votelinks').classList.add('nosee')
     }
