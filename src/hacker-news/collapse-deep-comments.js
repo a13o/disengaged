@@ -14,13 +14,20 @@ const COMMENT_COLLAPSE_DEPTH = 1;
  * @type {Number} depth
  */
 (function collapseDeepComments (depth) {
+  let indentWidth
+
   document.querySelectorAll('tr.athing.comtr').forEach((comment) => {
     // already collapsed? nothing to do
     if (comment.classList.contains('coll')) return
 
-    // convert depth to indentation
+    // measure the indentation element to see how nested we are
     const indent = comment.querySelector('td.ind img')
-    const targetWidth = 40 * depth
+    if (!indentWidth && indent.width) {
+      // varies by platform; 40px on desktop and 12px on mobile
+      indentWidth = indent.width
+    }
+    // convert depth to indentation
+    const targetWidth = indentWidth * depth
 
     // rule out anything not indented deeply enough
     if (!indent.width || indent.width < targetWidth) return
