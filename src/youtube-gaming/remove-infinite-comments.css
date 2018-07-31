@@ -1,0 +1,12 @@
+/**
+ * Hide the component triggering ajax requests for more comments.
+ * This is too clever by half. It waits for the first page of comments to load
+ * before hiding the ajax trigger.
+ * @see A.2
+ */
+
+ytg-scroll-pane:last-child div#items:not(:empty) + div#continuations
+
+{
+  display: none !important;
+}

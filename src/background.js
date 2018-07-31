@@ -26,7 +26,7 @@ const CONTENT_SCRIPTS = [
       'disable-autoplay.js',
       'remove-comment-count.js',
       'remove-deep-comments.css',
-      'remove-infinite-comments.js',
+      'remove-infinite-comments.css',
       'remove-live-views.css',
       'remove-subscribers.css',
       'remove-suggested-videos.css',
@@ -41,7 +41,7 @@ const CONTENT_SCRIPTS = [
     folder: 'src/youtube-gaming',
     files: [
       'remove-deep-comments.css',
-      'remove-infinite-comments.js',
+      'remove-infinite-comments.css',
       'remove-live-views.css',
       'remove-view-count.css',
       'remove-votes.css'
