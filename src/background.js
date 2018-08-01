@@ -81,7 +81,7 @@ function updateIcon () {
     path: isEnabled ? 'icons/icon_48_on.png' : 'icons/icon_48_off.png'
   })
   browser.browserAction.setTitle({
-    title: `Disengaged - Attention Blocker (${isEnabled ? 'on' : 'off'})`
+    title: `Disengaged (${isEnabled ? 'on' : 'off'})`
   })
 }
 

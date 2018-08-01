@@ -1,8 +1,8 @@
 {
   "manifest_version": 2,
-  "name": "Disengaged - an Attention Blocker",
+  "name": "Disengaged - an Addiction Blocker",
   "short_name": "Disengaged",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "The internet sux rn so I deleted the bad parts",
   "homepage_url": "https://github.com/a13o/disengaged",
   "icons": {
@@ -16,7 +16,7 @@
   },
   "browser_action": {
     "default_icon": "icons/icon_48_on.png",
-    "default_title": "Disengaged - Attention Blocker"
+    "default_title": "Disengaged"
   },
   "background": {
     "scripts": ["src/background.js"]
