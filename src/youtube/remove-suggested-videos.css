@@ -7,7 +7,10 @@
 .videowall-endscreen,
 
 /* Suggested videos on the right */
-ytd-watch-next-secondary-results-renderer
+ytd-watch-next-secondary-results-renderer,
+
+/* Embedded video pause overlay */
+div.ytp-pause-overlay
 
 {
   display: none !important;
