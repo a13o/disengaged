@@ -1,5 +1,9 @@
 /* global browser */
 
+const GLOBAL_SCRIPTS = [
+  'src/_utils.js'
+]
+
 const CONTENT_SCRIPTS = [
   {
     matches: '*://*.news.ycombinator.com/*',
@@ -103,9 +107,13 @@ async function registerContentScripts () {
       css: contentScript.files
         .filter(file => file.match(/.*\.css$/))
         .map((file) => { return { file: `${contentScript.folder}/${file}` } }),
-      js: contentScript.files
-        .filter(file => file.match(/.*\.js$/))
-        .map((file) => { return { file: `${contentScript.folder}/${file}` } })
+      js: [].concat(
+        GLOBAL_SCRIPTS
+          .map((file) => { return { file } }),
+        contentScript.files
+          .filter(file => file.match(/.*\.js$/))
+          .map((file) => { return { file: `${contentScript.folder}/${file}` } })
+      )
     }).then((rcs) => {
       registeredContentScripts.push(rcs)
     })
