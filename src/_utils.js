@@ -1,7 +1,33 @@
-/* eslint no-unused-vars:0 */
 /* global MutationObserver, Node */
 
-function jscss (selector, props) {
+/**
+ * A way to write css-like rules, consistently enforced on a live document.
+ *
+ * Perform complex string replacement on text inside matching elements. It uses
+ * String.prototype.replace under the hood.
+ * @example
+ * jscss('.full-name', {
+ *   search: /(\w+)\s(\w+)/,
+ *   replace: '$2, $1'
+ * })
+ *
+ * Only apply the css results on the first set of results. If you know there
+ * won't be any further results, this flag can be used to improve performance
+ * by telling jscss not to watch the document anymore.
+ * @example
+ * jscss('.full-name', {
+ *   search: /(\w+)\s(\w+)/,
+ *   replace: '$2, $1',
+ *   firstResultOnly: true
+ * })
+ *
+ * @param {String} selector
+ * @param {Object} props
+ * @param {RegExp} props.search
+ * @param {String} props.replace
+ * @param {Boolean} props.firstResultOnly
+ */
+function jscss (selector, props) { // eslint-disable-line no-unused-vars
   const body = document.getRootNode().body
 
   let matchCache = body.querySelectorAll(selector)
@@ -46,6 +72,11 @@ function jscss (selector, props) {
       if (seen) { continue }
       // From this point forward matches[i] is known to be newly ADDED.
       applyStyle(matches[i], props)
+
+      // As an optimization, jscss can be requested to apply only once.
+      if (props.firstResultOnly) {
+        observer.disconnect()
+      }
     }
 
     /**
@@ -72,18 +103,36 @@ function jscss (selector, props) {
 }
 
 function applyStyle (elem, props) {
-  // search/replace text support
+  // Search/replace text support
   if ('search' in props && 'replace' in props) {
-    elem.childNodes.forEach((child) => {
-      if (child.nodeType !== Node.TEXT_NODE) { return }
-      child.textContent = child.textContent.replace(props.search, props.replace)
-    })
+    addTextObserver(elem, props)
   }
 }
 
 function removeStyle (elem, props) {
-  // search/replace text support
+  // Search/replace text support
   if ('search' in props && 'replace' in props) {
-    // No way to undo
+    // Could cache the observers and disconnect them, but no need atm.
   }
+}
+
+function addTextObserver (elem, props) {
+  searchReplaceChildren(elem, props)
+
+  const observer = new MutationObserver(() => searchReplaceChildren(elem, props))
+  observer.observe(elem, {
+    childList: true,
+    characterData: true
+  })
+}
+
+function searchReplaceChildren (elem, props) {
+  elem.childNodes.forEach((child) => {
+    if (child.nodeType !== Node.TEXT_NODE) { return }
+    const newStr = child.textContent.replace(props.search, props.replace)
+    // Only assign if the value would actually change, since blindly
+    // assigning could cause another mutation to be observed.
+    if (child.textContent === newStr) { return }
+    child.textContent = newStr
+  })
 }

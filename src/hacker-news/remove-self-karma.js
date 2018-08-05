@@ -7,6 +7,7 @@
 (function removeSelfKarma () {
   jscss('table#hnmain > tbody > tr:first-child tr > td:last-child span.pagetop', {
     search: /\(\d+\)\s/,
-    replace: ''
+    replace: '',
+    firstResultOnly: true
   })
 })()

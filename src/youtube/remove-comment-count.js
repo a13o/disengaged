@@ -7,6 +7,7 @@
 (function removeCommentCount () {
   jscss('ytd-comments-header-renderer h2#count .count-text', {
     search: /[\d,]+\s/,
-    replace: ''
+    replace: '',
+    firstResultOnly: true
   })
 })()
