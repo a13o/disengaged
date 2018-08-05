@@ -26,6 +26,7 @@
  * @param {RegExp} props.search
  * @param {String} props.replace
  * @param {Boolean} props.firstResultOnly
+ * @returns {MutationObserver} Returns the observer used in case you want to disconnect it.
  */
 function jscss (selector, props) { // eslint-disable-line no-unused-vars
   const body = document.getRootNode().body
@@ -98,8 +99,12 @@ function jscss (selector, props) { // eslint-disable-line no-unused-vars
     subtree: true,
     childList: true,
     attributes: true,
+    // Technically any attribute can cause a change worth observing since css
+    // has attribute selectors. No need atm though, so let's be performant.
     attributeFilter: ['id', 'class']
   })
+
+  return observer
 }
 
 function applyStyle (elem, props) {
@@ -117,16 +122,16 @@ function removeStyle (elem, props) {
 }
 
 function addTextObserver (elem, props) {
-  searchReplaceChildren(elem, props)
+  searchAndReplaceChildren(elem, props)
 
-  const observer = new MutationObserver(() => searchReplaceChildren(elem, props))
+  const observer = new MutationObserver(() => searchAndReplaceChildren(elem, props))
   observer.observe(elem, {
     childList: true,
     characterData: true
   })
 }
 
-function searchReplaceChildren (elem, props) {
+function searchAndReplaceChildren (elem, props) {
   elem.childNodes.forEach((child) => {
     if (child.nodeType !== Node.TEXT_NODE) { return }
     const newStr = child.textContent.replace(props.search, props.replace)
