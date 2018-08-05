@@ -10,7 +10,15 @@
 ytd-watch-next-secondary-results-renderer,
 
 /* Embedded video pause overlay */
-div.ytp-pause-overlay
+div.ytp-pause-overlay,
+
+/* Video player previous/next buttons */
+.ytp-prev-button,
+.ytp-next-button,
+
+/* cards CTA in top right corner of paused video */
+.ytp-cards-button,
+.ytp-cards-teaser
 
 {
   display: none !important;
