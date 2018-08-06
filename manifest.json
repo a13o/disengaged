@@ -2,7 +2,7 @@
   "manifest_version": 2,
   "name": "Disengaged - an Addiction Blocker",
   "short_name": "Disengaged",
-  "version": "0.1.4",
+  "version": "0.2.0",
   "description": "The internet sux rn so I deleted the bad parts",
   "homepage_url": "https://github.com/a13o/disengaged",
   "icons": {

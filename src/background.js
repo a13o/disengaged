@@ -24,7 +24,9 @@ const CONTENT_SCRIPTS = [
     folder: 'src/twitter',
     files: [
       'remove-comment-count.css',
+      'remove-deep-comments.css',
       'remove-follow-count.css',
+      'remove-infinite-comments.css',
       'remove-like-count.css',
       'remove-related.css',
       'remove-retweet-count.css',

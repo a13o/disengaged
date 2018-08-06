@@ -1,0 +1,15 @@
+/**
+ * Remove all comments except direct comments
+ * @see A.2
+ */
+
+/* Replies to replies */
+.ThreadedConversation-tweet:not(:first-child),
+.ThreadedConversation-tweet::after, /* Thread line */
+
+/* The click for more replies prompt */
+.ThreadedConversation-moreReplies
+
+{
+  display: none !important;
+}

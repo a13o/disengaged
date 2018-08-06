@@ -1,5 +1,5 @@
 /**
- * Remove like counts
+ * Remove like (favorites) counts
  * @see B.1
  */
 
@@ -7,7 +7,11 @@
 .ProfileNav-item--favorites .ProfileNav-value,
 
 /* Like a tweet */
-.ProfileTweet-action--favorite .ProfileTweet-actionCountForPresentation
+.ProfileTweet-action--favorite .ProfileTweet-actionCountForPresentation,
+
+/* Modal tweet view */
+.js-stat-favorites strong,
+.avatar-row
 
 {
   display: none !important;
@@ -17,4 +21,10 @@
 .ProfileNav-item--favorites
 {
   vertical-align: top !important;
+}
+
+/* In modal tweet view the avatar-row is centering the text. Gotta re-center it. */
+.js-stat-favorites a
+{
+  padding-bottom: 12px !important;
 }

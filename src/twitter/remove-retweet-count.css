@@ -4,7 +4,10 @@
  */
 
 /* Retweet a tweet */
-.ProfileTweet-action--retweet .ProfileTweet-actionCountForPresentation
+.ProfileTweet-action--retweet .ProfileTweet-actionCountForPresentation,
+
+/* Modal tweet view */
+.js-stat-retweets strong
 
 {
   display: none !important;

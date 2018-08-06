@@ -1,0 +1,19 @@
+/**
+ * Hides the component triggering ajax requests for more comments. It seems to
+ * get off 1 more ajax request before stopping, so also hide comments after the
+ * first page.
+ * @see A.2
+ */
+
+#descendants #stream-items-id li:nth-child(n+7),
+#descendants .stream-footer .stream-loading
+
+{
+  display: none !important;
+}
+
+/* This is shown by Twitter when there are no more comments */
+#descendants .stream-footer .stream-end
+{
+  display: block !important;
+}
