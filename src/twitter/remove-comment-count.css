@@ -1,0 +1,11 @@
+/**
+ * Remove comment counts
+ * @see B.1
+ */
+
+/* View comments on a tweet */
+.ProfileTweet-action--reply .ProfileTweet-actionCountForPresentation
+
+{
+  display: none !important;
+}

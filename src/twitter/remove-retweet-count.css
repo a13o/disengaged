@@ -1,0 +1,11 @@
+/**
+ * Remove retweet counts
+ * @see B.1
+ */
+
+/* Retweet a tweet */
+.ProfileTweet-action--retweet .ProfileTweet-actionCountForPresentation
+
+{
+  display: none !important;
+}

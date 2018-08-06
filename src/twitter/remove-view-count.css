@@ -1,0 +1,11 @@
+/**
+ * Remove view counts
+ * @see B.1
+ */
+
+/* Embedded videos */
+[data-testid="viewCount"] > span
+
+{
+  display: none !important;
+}

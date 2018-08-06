@@ -1,0 +1,11 @@
+/**
+ * Trending topics
+ * @see A.1
+ */
+
+/* Left column on profile page */
+.module.Trends
+
+{
+  display: none !important;
+}

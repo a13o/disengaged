@@ -1,0 +1,11 @@
+/**
+ * Related users
+ * @see A.1
+ */
+
+/* Left column on profile page */
+.module.RelatedUsers
+
+{
+  display: none !important;
+}

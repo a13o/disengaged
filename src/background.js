@@ -19,6 +19,21 @@ const CONTENT_SCRIPTS = [
     ]
   },
   {
+    matches: '*://*.twitter.com/*',
+    allFrames: true,
+    folder: 'src/twitter',
+    files: [
+      'remove-comment-count.css',
+      'remove-follow-count.css',
+      'remove-like-count.css',
+      'remove-related.css',
+      'remove-retweet-count.css',
+      'remove-trending.css',
+      'remove-view-count.css',
+      'remove-vote-count.css'
+    ]
+  },
+  {
     matches: '*://*.youtube.com/*',
     excludeMatches: [
       '*://*.gaming.youtube.com/*',

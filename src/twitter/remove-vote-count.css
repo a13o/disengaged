@@ -1,0 +1,13 @@
+/**
+ * Remove vote counts
+ * @see B.1
+ */
+
+/* Embedded polls */
+/* Twitter used !important here so we have a specificity battle */
+span.TwitterCardsGrid-col--spacerNext.PollXChoice-footer--total,
+span.TwitterCardsGrid-col--spacerNext.PollXChoice-footer--total + .TwitterCardsGrid-col--spacerNext
+
+{
+  display: none !important;
+}

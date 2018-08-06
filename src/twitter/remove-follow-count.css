@@ -1,0 +1,28 @@
+/**
+ * Remove follow counts
+ * @see B.1
+ */
+
+/* Top of profile page */
+.ProfileNav-item--following .ProfileNav-value,
+.ProfileNav-item--followers .ProfileNav-value,
+
+/* Couldn't find a better way to hide the counts in tooltips */
+.tooltip,
+
+/* Popover profile card */
+#profile-hover-container .ProfileCardStats-stat:nth-child(2) .ProfileCardStats-statValue,
+#profile-hover-container .ProfileCardStats-stat:nth-child(3) .ProfileCardStats-statValue
+
+{
+  display: none !important;
+}
+
+/* These li containers bottom align and look bad after removing the counts */
+.ProfileNav-item--following,
+.ProfileNav-item--followers,
+#profile-hover-container .ProfileCardStats-stat:nth-child(2),
+#profile-hover-container .ProfileCardStats-stat:nth-child(3)
+{
+  vertical-align: top !important;
+}

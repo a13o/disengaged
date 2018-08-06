@@ -22,7 +22,8 @@
     "scripts": ["src/background.js"]
   },
   "permissions": [
-    "*://*.news.ycombinator.com/*",
-    "*://*.youtube.com/*"
+    "*://*.youtube.com/*",
+    "*://*.twitter.com/*",
+    "*://*.news.ycombinator.com/*"
   ]
 }
