@@ -11,7 +11,11 @@
 
 /* Modal tweet view */
 .js-stat-favorites strong,
-.avatar-row
+.avatar-row,
+
+/* Moments */
+.MomentCapsuleLikesCount,
+.MomentCapsuleLikesFacepile
 
 {
   display: none !important;

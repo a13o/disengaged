@@ -4,7 +4,11 @@
  */
 
 /* Left column on profile page */
-.module.RelatedUsers
+.module.RelatedUsers,
+.module.wtf-module,
+
+/* After following a user, suggestions appear at the top of their timeline */
+.ProfileClusterFollow
 
 {
   display: none !important;

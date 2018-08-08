@@ -12,7 +12,15 @@
 
 /* Popover profile card */
 #profile-hover-container .ProfileCardStats-stat:nth-child(2) .ProfileCardStats-statValue,
-#profile-hover-container .ProfileCardStats-stat:nth-child(3) .ProfileCardStats-statValue
+#profile-hover-container .ProfileCardStats-stat:nth-child(3) .ProfileCardStats-statValue,
+
+/* Logged in user's following count on dashboard */
+.DashboardProfileCard-content .ProfileCardStats-stat:last-child .ProfileCardStats-statValue,
+
+/* Profile following page */
+
+.ProfileNav-item--lists .ProfileNav-value,
+.ProfileNav-item--moments .ProfileNav-value
 
 {
   display: none !important;
@@ -22,7 +30,10 @@
 .ProfileNav-item--following,
 .ProfileNav-item--followers,
 #profile-hover-container .ProfileCardStats-stat:nth-child(2),
-#profile-hover-container .ProfileCardStats-stat:nth-child(3)
+#profile-hover-container .ProfileCardStats-stat:nth-child(3),
+.DashboardProfileCard-content .ProfileCardStats-stat:last-child,
+.ProfileNav-item--lists,
+.ProfileNav-item--moments
 {
   vertical-align: top !important;
 }
