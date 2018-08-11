@@ -9,5 +9,5 @@
     search: /\(\d+\)\s/,
     replace: '',
     firstResultOnly: true
-  })
-})()
+  });
+})();

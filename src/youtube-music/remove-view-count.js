@@ -10,5 +10,5 @@
     search: /^\s•\s|[\d.]+[KMB]*\sviews$/,
     replace: '',
     firstResultOnly: true
-  })
-})()
+  });
+})();

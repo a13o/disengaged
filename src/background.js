@@ -2,7 +2,7 @@
 
 const GLOBAL_SCRIPTS = [
   'src/_utils.js'
-]
+];
 
 const CONTENT_SCRIPTS = [
   {
@@ -77,42 +77,42 @@ const CONTENT_SCRIPTS = [
       'remove-view-count.js'
     ]
   }
-]
+];
 
-let isEnabled = true
+let isEnabled = true;
 let registeredContentScripts = []
 
 ;(function main () {
-  updateIcon()
-  updateContentScripts()
-})()
+  updateIcon();
+  updateContentScripts();
+})();
 
 browser.browserAction.onClicked.addListener(() => {
-  isEnabled = !isEnabled
-  updateIcon()
-  updateContentScripts()
-  browser.tabs.reload()
-})
+  isEnabled = !isEnabled;
+  updateIcon();
+  updateContentScripts();
+  browser.tabs.reload();
+});
 
 function updateIcon () {
   browser.browserAction.setTitle({
     title: `Disengaged (${isEnabled ? 'on' : 'off'})`
-  })
+  });
 
   // Mobile Firefox doesn't support setIcon
-  if (!browser.browserAction.setIcon) { return }
+  if (!browser.browserAction.setIcon) { return; }
   browser.browserAction.setIcon({
     path: isEnabled ? 'icons/icon_48_on.png' : 'icons/icon_48_off.png'
-  })
+  });
 }
 
 function updateContentScripts () {
-  isEnabled ? registerContentScripts() : unregisterContentScripts()
+  isEnabled ? registerContentScripts() : unregisterContentScripts();
 }
 
 function unregisterContentScripts () {
-  registeredContentScripts.forEach(rcs => rcs.unregister())
-  registeredContentScripts = []
+  registeredContentScripts.forEach(rcs => rcs.unregister());
+  registeredContentScripts = [];
 }
 
 async function registerContentScripts () {
@@ -123,16 +123,16 @@ async function registerContentScripts () {
       allFrames: !!contentScript.allFrames,
       css: contentScript.files
         .filter(file => file.match(/.*\.css$/))
-        .map((file) => { return { file: `${contentScript.folder}/${file}` } }),
+        .map((file) => { return { file: `${contentScript.folder}/${file}` }; }),
       js: [].concat(
         GLOBAL_SCRIPTS
-          .map((file) => { return { file } }),
+          .map((file) => { return { file }; }),
         contentScript.files
           .filter(file => file.match(/.*\.js$/))
-          .map((file) => { return { file: `${contentScript.folder}/${file}` } })
+          .map((file) => { return { file: `${contentScript.folder}/${file}` }; })
       )
     }).then((rcs) => {
-      registeredContentScripts.push(rcs)
-    })
-  })
+      registeredContentScripts.push(rcs);
+    });
+  });
 }
