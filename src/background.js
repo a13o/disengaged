@@ -91,19 +91,27 @@ const CONTENT_SCRIPTS = [
 ];
 
 let isEnabled = true;
-let registeredContentScripts = []
+let registeredContentScripts = [];
 
-;(function main () {
+(function main () {
   updateIcon();
   updateContentScripts();
 })();
 
-browser.browserAction.onClicked.addListener(() => {
+browser.runtime.onMessage.addListener((msg) => {
+  switch (msg) {
+  case 'toggle':
+    toggle();
+    break;
+  }
+});
+
+function toggle () {
   isEnabled = !isEnabled;
   updateIcon();
   updateContentScripts();
   browser.tabs.reload();
-});
+}
 
 function updateIcon () {
   browser.browserAction.setTitle({

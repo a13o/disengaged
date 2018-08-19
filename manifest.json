@@ -15,6 +15,8 @@
     }
   },
   "browser_action": {
+    "browser_style": true,
+    "default_popup": "src/popup.html",
     "default_icon": "icons/icon_48_on.png",
     "default_title": "Disengaged"
   },
@@ -24,6 +26,7 @@
     ]
   },
   "permissions": [
+    "activeTab",
     "*://*.youtube.com/*",
     "*://*.twitter.com/*",
     "*://*.news.ycombinator.com/*",
