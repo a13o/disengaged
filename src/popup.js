@@ -4,6 +4,12 @@ let currentDomain;
 let currentUrlKey;
 let currentState;
 
+(function init() {
+  document.getElementById('toggle-for-site').addEventListener('click', (e) => {
+    browser.runtime.sendMessage({ id: 'toggle' });
+  });
+})();
+
 browser.tabs
   .query({ active: true, currentWindow: true })
   .then((tabs) => {
@@ -16,14 +22,10 @@ browser.tabs
   })
   .then((localStorage) => {
     currentState = fetchUrlState(currentUrlKey, localStorage);
-    init();
+    updateHtmlBindings();
   });
 
-function init() {
-  document.getElementById('toggle-for-site').addEventListener('click', (e) => {
-    browser.runtime.sendMessage({ id: 'toggle' });
-  });
-
+function updateHtmlBindings() {
   const $currentSite = document.getElementById('current-site');
   $currentSite.textContent = currentDomain;
 
