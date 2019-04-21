@@ -10,7 +10,6 @@
 }
 [id="2x-container"] [data-click-id="comments"] > span::after {
     content: "Comments";
-    display: block;
     font-size: 12px;
 }
 
