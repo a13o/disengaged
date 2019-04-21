@@ -1,0 +1,27 @@
+/**
+ * Remove comment count
+ * @see B.1
+ */
+
+/* New reddit */
+[id="2x-container"] [data-click-id="comments"] > span
+{
+    text-indent: -9999px;
+    line-height: 0;
+}
+[id="2x-container"] [data-click-id="comments"] > span::after {
+    content: "Comments";
+    text-indent: 0;
+    display: block;
+    line-height: initial;
+}
+
+/* Old reddit */
+#siteTable .entry .comments {
+    font-size: 0;
+}
+
+#siteTable .entry .comments::after {
+    content: "comments";
+    font-size: 10px;
+}

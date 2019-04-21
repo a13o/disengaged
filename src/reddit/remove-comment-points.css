@@ -1,0 +1,14 @@
+/**
+ * Remove post points
+ * @see B.1
+ */
+
+/* New reddit */
+[id="2x-container"] .Comment > div:last-child > div:first-of-type > span:nth-last-of-type(2) {
+    display: none;
+}
+
+/* Old reddit */
+#siteTable + div.commentarea .tagline .score  {
+    display: none !important;
+}

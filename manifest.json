@@ -24,6 +24,7 @@
   "permissions": [
     "*://*.youtube.com/*",
     "*://*.twitter.com/*",
-    "*://*.news.ycombinator.com/*"
+    "*://*.news.ycombinator.com/*",
+    "*://*.reddit.com/*"
   ]
 }
