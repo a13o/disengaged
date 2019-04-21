@@ -6,14 +6,12 @@
 /* New reddit */
 [id="2x-container"] [data-click-id="comments"] > span
 {
-    text-indent: -9999px;
-    line-height: 0;
+    font-size: 0;
 }
 [id="2x-container"] [data-click-id="comments"] > span::after {
     content: "Comments";
-    text-indent: 0;
     display: block;
-    line-height: initial;
+    font-size: 12px;
 }
 
 /* Old reddit */
