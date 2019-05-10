@@ -1,0 +1,15 @@
+/**
+ * Remove number of vote points on a post
+ * @see B.1
+ */
+
+/* New reddit */
+[id="2x-container"] [data-click-id=upvote] + div
+{
+    display: none;
+}
+
+/* Old reddit */
+#siteTable .midcol .score {
+    visibility: hidden;
+}

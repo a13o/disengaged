@@ -1,0 +1,24 @@
+/**
+ * Remove comment count
+ * @see B.1
+ */
+
+/* New reddit */
+[id="2x-container"] [data-click-id="comments"] > span
+{
+    font-size: 0;
+}
+[id="2x-container"] [data-click-id="comments"] > span::after {
+    content: "Comments";
+    font-size: 12px;
+}
+
+/* Old reddit */
+#siteTable .entry .comments {
+    font-size: 0;
+}
+
+#siteTable .entry .comments::after {
+    content: "comments";
+    font-size: 10px;
+}

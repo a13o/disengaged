@@ -76,6 +76,16 @@ const CONTENT_SCRIPTS = [
       'remove-view-count.css',
       'remove-view-count.js'
     ]
+  },
+  {
+    matches: '*://*.reddit.com/r/*',
+    allFrames: true,
+    folder: 'src/reddit',
+    files: [
+      'remove-post-points.css',
+      'remove-comment-points.css',
+      'remove-comment-count.css'
+    ]
   }
 ];
 
