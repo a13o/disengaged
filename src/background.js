@@ -84,7 +84,8 @@ const CONTENT_SCRIPTS = [
     files: [
       'remove-post-points.css',
       'remove-comment-points.css',
-      'remove-comment-count.css'
+      'remove-comment-count.css',
+      'remove-comment-points.js'
     ]
   }
 ];

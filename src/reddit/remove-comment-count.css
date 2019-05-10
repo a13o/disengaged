@@ -4,21 +4,35 @@
  */
 
 /* New reddit */
-[id="2x-container"] [data-click-id="comments"] > span
+
+/* post summary */
+[id="2x-container"] [data-click-id="comments"] > span,
+/* head post on comments page */
+[id="2x-container"] [data-test-id="post-content"] i.icon-comment + span,
+/* top posts from the community */
+[id="2x-container"] div[data-click-id="body"] i.icon-comment + span
 {
     font-size: 0;
 }
-[id="2x-container"] [data-click-id="comments"] > span::after {
+
+[id="2x-container"] [data-click-id="comments"] > span::after,
+[id="2x-container"] [data-test-id="post-content"] i.icon-comment + span::after,
+[id="2x-container"] div[data-click-id="body"] i.icon-comment + span::after
+{
     content: "Comments";
     font-size: 12px;
 }
 
+
 /* Old reddit */
-#siteTable .entry .comments {
+
+#siteTable .entry .comments
+{
     font-size: 0;
 }
 
-#siteTable .entry .comments::after {
+#siteTable .entry .comments::after
+{
     content: "comments";
     font-size: 10px;
 }
