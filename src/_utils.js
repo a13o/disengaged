@@ -5,26 +5,40 @@
  *
  * Perform complex string replacement on text inside matching elements. It uses
  * String.prototype.replace under the hood.
- * @example
+ * ```js
  * jscss('.full-name', {
  *   search: /(\w+)\s(\w+)/,
  *   replace: '$2, $1'
  * })
+ * ```
+ *
+ * Optionally also update the styles on the element with the replaced text.
+ * ```js
+ * jscss('.full-name', {
+  *   search: /(\w+)\s(\w+)/,
+  *   replace: '$2, $1',
+  *   replaceStyles: {
+  *     paddingLeft: '4px'
+  *   }
+  * })
+ * ```
  *
  * Only apply the css results on the first set of results. If you know there
  * won't be any further results, this flag can be used to improve performance
  * by telling jscss not to watch the document anymore.
- * @example
+ * ```js
  * jscss('.full-name', {
  *   search: /(\w+)\s(\w+)/,
  *   replace: '$2, $1',
  *   firstResultOnly: true
  * })
+ * ```
  *
  * @param {String} selector
  * @param {Object} props
  * @param {RegExp} props.search
  * @param {String} props.replace
+ * @param {Object} prop.replaceStyles
  * @param {Boolean} props.firstResultOnly
  * @returns {MutationObserver} Returns the observer used in case you want to disconnect it.
  */
@@ -132,6 +146,8 @@ function addTextObserver (elem, props) {
 }
 
 function searchAndReplaceChildren (elem, props) {
+  let didReplace = false;
+
   elem.childNodes.forEach((child) => {
     if (child.nodeType !== Node.TEXT_NODE) { return; }
     const newStr = child.textContent.replace(props.search, props.replace);
@@ -139,5 +155,12 @@ function searchAndReplaceChildren (elem, props) {
     // assigning could cause another mutation to be observed.
     if (child.textContent === newStr) { return; }
     child.textContent = newStr;
+    didReplace = true;
   });
+
+  if (didReplace && props.replaceStyles) {
+    Object.keys(props.replaceStyles).forEach((key) => {
+      elem.style[key] = props.replaceStyles[key];
+    });
+  }
 }
