@@ -32,9 +32,37 @@ Open an issue, start it with `[RFC]` and explain your reasoning.
 
 The most common way to start is with a concrete use case demonstrating what you want to block or unblock, and which is currently incompatible or not covered by the code of ethics.
 
-## Developer Setup
+## Firefox Developer Setup
 
 1. Clone the repo.
-1. Add the developer extension to your browser.
-   * Firefox: visit [about:debugging](about:debugging) and click `Load Temporary Add-on`.
-   * Chrome: I dunno yet, I haven't tested Chrome yet.
+2. Add the developer extension to Firefox.
+   - visit [about:debugging#/runtime/this-firefox](about:debugging#/runtime/this-firefox) and click `Load Temporary Add-on`.
+3. Or use [web-ext](#use-web-ext)
+
+Follow the Firefox Extension Workshop tutorial:
+<https://extensionworkshop.com/documentation/develop/temporary-installation-in-firefox/>
+
+### Use web-ext
+
+Speed up browser extension development and make development tasks easier with `web-ext`
+
+<https://extensionworkshop.com/documentation/develop/getting-started-with-web-ext/>
+
+      npm install --global web-ext
+      web-ext run
+
+This starts Firefox and loads the extension temporarily in the browser
+
+For example, to test the extenstion on Hackernews run this command:
+
+      web-ext run --browser-console --start-url https://news.ycombinator.com
+
+## Chrome Developer Setup
+
+1. Clone the repo.
+2. Install [web-ext](#use-web-ext)
+3. And run the Extension
+
+   ```
+   web-ext run -t chromium --start-url <https://news.ycombinator.com>
+   ```
