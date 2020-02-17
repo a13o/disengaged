@@ -128,13 +128,14 @@ function unregisterContentScripts () {
 
 async function registerContentScripts () {
   CONTENT_SCRIPTS.forEach((contentScript) => {
+    contentScript.files
+        .filter(file => file.match(/.*\.css$/))
+        .map(file => `${contentScript.folder}/${file}`)
+        .map(file => browser.tabs.insertCSS(null, { file }));
     browser.contentScripts.register({
       matches: [contentScript.matches],
       excludeMatches: contentScript.excludeMatches,
       allFrames: !!contentScript.allFrames,
-      css: contentScript.files
-        .filter(file => file.match(/.*\.css$/))
-        .map((file) => { return { file: `${contentScript.folder}/${file}` }; }),
       js: [].concat(
         GLOBAL_SCRIPTS
           .map((file) => { return { file }; }),
