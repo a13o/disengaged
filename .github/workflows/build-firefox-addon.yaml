@@ -11,18 +11,11 @@ jobs:
     if: >
       github.event.repository.owner.login == github.actor
       &&
-      github.event.comment.body == '/build'
+      github.event.comment.body == '/build firefox'
 
     steps:
-    # - name: Trigger Check
-    #   id: trigger-check
-    #   uses: khan/pull-request-comment-trigger@1.0.0
-    #   with:
-    #     trigger: '/build'
-        
     - name: Checkout
       uses: actions/checkout@v2
-      # if: steps.trigger-check.outputs.triggered == 'true'
 
     - name: Build
       id: web-ext-build
@@ -33,5 +26,5 @@ jobs:
     - name: Artifact
       uses: actions/upload-artifact@v1
       with:
-        name: disengaged-${{ github.sha }}.xpi
+        name: disengaged-${{ github.sha }}
         path: ${{ steps.web-ext-build.outputs.target }}
