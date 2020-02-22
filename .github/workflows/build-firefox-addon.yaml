@@ -33,5 +33,5 @@ jobs:
     - name: Artifact
       uses: actions/upload-artifact@v1
       with:
-        name: disengaged-${{ GITHUB_SHA }}.xpi
+        name: disengaged-${{ github.sha }}.xpi
         path: ${{ steps.web-ext-build.outputs.target }}
