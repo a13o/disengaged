@@ -22,7 +22,7 @@ jobs:
         
     - name: Checkout
       uses: actions/checkout@v2
-      if: steps.trigger-check.outputs.triggered == 'true'
+      # if: steps.trigger-check.outputs.triggered == 'true'
 
     - name: Build
       id: web-ext-build
