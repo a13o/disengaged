@@ -1,0 +1,37 @@
+name: Build Firefox Add-on
+
+on:
+  issue_comment:
+    types: [created, edited]
+
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    if: >
+      github.event.repository.owner.login == github.actor
+      &&
+      github.event.comment.body == '/build'
+
+    steps:
+    # - name: Trigger Check
+    #   id: trigger-check
+    #   uses: khan/pull-request-comment-trigger@1.0.0
+    #   with:
+    #     trigger: '/build'
+        
+    - name: Checkout
+      uses: actions/checkout@v2
+      if: steps.trigger-check.outputs.triggered == 'true'
+
+    - name: Build
+      id: web-ext-build
+      uses: kewisch/action-web-ext@v1
+      with:
+        cmd: build
+
+    - name: Artifact
+      uses: actions/upload-artifact@v1
+      with:
+        name: disengaged-${{ GITHUB_SHA }}.xpi
+        path: ${{ steps.web-ext-build.outputs.target }}
