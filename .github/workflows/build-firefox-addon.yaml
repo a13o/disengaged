@@ -11,14 +11,14 @@ jobs:
     if: >
       github.event.repository.owner.login == github.actor
       &&
-      github.event.comment.body == '@build'
+      github.event.comment.body == '/build'
 
     steps:
     # - name: Trigger Check
     #   id: trigger-check
     #   uses: khan/pull-request-comment-trigger@1.0.0
     #   with:
-    #     trigger: '@build'
+    #     trigger: '/build'
         
     - name: Checkout
       uses: actions/checkout@v2
