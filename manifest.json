@@ -19,7 +19,10 @@
     "default_title": "Disengaged"
   },
   "background": {
-    "scripts": ["src/background.js"]
+    "scripts": [
+      "node_modules/webextension-polyfill/dist/browser-polyfill.min.js",
+      "src/background.js"
+    ]
   },
   "permissions": [
     "*://*.youtube.com/*",
