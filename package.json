@@ -1,0 +1,23 @@
+{
+  "private": true,
+  "name": "disengaged",
+  "version": "0.0.1",
+  "description": "The internet sux rn so I deleted the bad parts",
+  "scripts": {
+    "start:firefox": "web-ext run",
+    "test": "web-ext lint -w"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/a13o/disengaged.git"
+  },
+  "author": "a13o",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/a13o/disengaged/issues"
+  },
+  "homepage": "https://github.com/a13o/disengaged#readme",
+  "devDependencies": {
+    "web-ext": "^4.1.0"
+  }
+}

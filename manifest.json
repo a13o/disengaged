@@ -19,7 +19,9 @@
     "default_title": "Disengaged"
   },
   "background": {
-    "scripts": ["src/background.js"]
+    "scripts": [
+      "src/background.js"
+    ]
   },
   "permissions": [
     "*://*.youtube.com/*",

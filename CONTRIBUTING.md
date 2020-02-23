@@ -34,7 +34,15 @@ The most common way to start is with a concrete use case demonstrating what you 
 
 ## Developer Setup
 
+This project uses [mozilla/web-ext](https://github.com/mozilla/web-ext) for a nice developer experience. It launches a sandbox browser with the extension loaded, and supports livereload. To get set up:
+
 1. Clone the repo.
-1. Add the developer extension to your browser.
-   * Firefox: visit [about:debugging](about:debugging) and click `Load Temporary Add-on`.
-   * Chrome: I dunno yet, I haven't tested Chrome yet.
+1. `npm i`
+
+### Firefox Development
+
+1. `npm run start:firefox`
+
+### Chrome Development
+
+Chrome is not yet supported. The web-ext tool is compatible with Chrome, but the extension currently uses a `browser` API which is proprietary to Firefox.
