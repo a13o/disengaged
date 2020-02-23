@@ -46,3 +46,9 @@ This project uses [mozilla/web-ext](https://github.com/mozilla/web-ext) for a ni
 ### Chrome Development
 
 Chrome is not yet supported. The web-ext tool is compatible with Chrome, but the extension currently uses a `browser` API which is proprietary to Firefox.
+
+### Windows Troubleshooting
+
+The npm scripts should be running `web-ext` from the node_modules folder. You don't need to globally install the package. If npm is unable to find the `web-ext` executable in the project's folder, you may need to set your npm script shell to powershell.
+
+`npm config set script-shell "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe"`
