@@ -103,10 +103,10 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
   switch (request.id) {
   case 'toggle':
     toggle();
-    break;
-  case 'fetch-url-key':
-    sendResponse(findMatchingSiteForUrl(request.url));
-    break;
+    return;
+  case 'fetch-url-state':
+    fetchUrlState(sendResponse);
+    return true; // keeps sendResponse channel open
   }
 });
 
@@ -121,15 +121,39 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
 // ## Helper Functions
 
-function findMatchingSiteForUrl(url) {
+function fetchUrlState(sendResponse) {
+  let currentDomain;
+  let matchingSite;
+  browser.tabs
+    .query({ active: true, currentWindow: true })
+    .then((tabs) => {
+      currentDomain = getDomainFromUrl(tabs[0].url);
+      matchingSite = findMatchingSiteForDomain(currentDomain);
+
+      return browser.storage.local.get();
+    })
+    .then((localStorage) => {
+      const currentState = lookupStoredUrlState(matchingSite, localStorage);
+      currentState.domain = currentDomain;
+      sendResponse(currentState);
+    });
+}
+
+function getDomainFromUrl(url) {
+  const a = document.createElement('a');
+  a.setAttribute('href', url);
+  return `${a.protocol}//${a.hostname}`;
+}
+
+function findMatchingSiteForDomain(domain) {
   const matchingScript = CONTENT_SCRIPTS.find((contentScript) => {
     const regex = matchPatternToRegExp(contentScript.matches);
     // See if it matches the main pattern
-    if (regex.test(url)) {
+    if (regex.test(domain)) {
       // Make sure it isn't in the excludes list
       const excludes = contentScript.excludeMatches;
       const isExcluded = excludes && excludes.some((exclude) => {
-        return matchPatternToRegExp(exclude).test(url);
+        return matchPatternToRegExp(exclude).test(domain);
       });
       if (!isExcluded) {
         return contentScript.matches;
@@ -188,6 +212,28 @@ function registerContentScripts() {
       registeredContentScripts.push(rcs);
     });
   });
+}
+
+/**
+ * If the url is not supported, the plugin does not modify the site.
+ * Returns { supported: false, exists: false, state: false }.
+ *
+ * If the url is not present in storage, this is the first time visiting the url.
+ * Returns { supported: true, exists: false, state: false }
+ *
+ * If the url is in storage, return whether the plugin is enabled or not.
+ * Returns { supported: true, exists: true, state: true|false }
+ *
+ * @param {String} urlKey the `matches` key from the content scripts config
+ * @param {browser.storage.StorageArea} localStorage
+ * @return {{ supported: Boolean, exists: Boolean, state: Boolean }}
+ */
+function lookupStoredUrlState(urlKey, localStorage) {
+  return {
+    supported: !!urlKey,
+    exists: localStorage.hasOwnProperty(urlKey),
+    state: !!localStorage[urlKey],
+  };
 }
 
 /**
