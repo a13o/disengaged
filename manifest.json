@@ -27,14 +27,13 @@
     ]
   },
   "permissions": [
-    "activeTab",
     "storage",
-    "*://*.youtube.com/*",
-    "*://*.twitter.com/*",
-    "*://*.news.ycombinator.com/*",
-    "*://*.reddit.com/*"
+    "tabs"
   ],
   "optional_permissions": [
-
+    "*://*.news.ycombinator.com/*",
+    "*://*.reddit.com/*",
+    "*://*.twitter.com/*",
+    "*://*.youtube.com/*"
   ]
 }
