@@ -1,8 +1,20 @@
 html, body {
-  margin: 0.3em;
 	min-width: 250px;
+}
+
+body {
+  margin: 0.3em;
 }
 
 .hidden {
   display: none;
+}
+
+#debug {
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  border: 1px solid;
+  background: lightgray; /* todo localize to lightgrey for en-gb */
+  font-size: 8px;
 }
