@@ -3,7 +3,23 @@
 (function init() {
   sendMessageFromButton('toggle-for-site', 'toggle');
 
-  updateState();
+  let cacheState;
+
+  document.getElementById('register-site').addEventListener('click', () => {
+    browser.permissions
+      .request({
+        origins: [cacheState.matchingSite],
+      })
+      .then((response) => {
+        if (response) {
+          browser.runtime.sendMessage({ id: 'toggle' });
+        }
+      });
+  });
+
+  updateState().then((state) => {
+    cacheState = state;
+  });
 })();
 
 function updateState() {
