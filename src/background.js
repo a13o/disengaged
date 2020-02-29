@@ -105,7 +105,8 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
     toggle();
     return;
   case 'fetch-url-state':
-    fetchUrlState(sendResponse);
+    fetchUrlState()
+      .then(sendResponse);
     return true; // keeps sendResponse channel open
   }
 });
@@ -121,22 +122,26 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
 // ## Helper Functions
 
-function fetchUrlState(sendResponse) {
-  let currentDomain;
-  let matchingSite;
-  browser.tabs
-    .query({ active: true, currentWindow: true })
-    .then((tabs) => {
-      currentDomain = getDomainFromUrl(tabs[0].url);
-      matchingSite = findMatchingSiteForDomain(currentDomain);
+function fetchUrlState() {
+  return new Promise((resolve, reject) => {
+    let currentDomain;
+    let matchingSite;
+    browser.tabs
+      .query({ active: true, currentWindow: true })
+      .then((tabs) => {
+        currentDomain = getDomainFromUrl(tabs[0].url);
+        matchingSite = findMatchingSiteForDomain(currentDomain);
 
-      return browser.storage.local.get();
-    })
-    .then((localStorage) => {
-      const currentState = lookupStoredUrlState(matchingSite, localStorage);
-      currentState.domain = currentDomain;
-      sendResponse(currentState);
-    });
+        return browser.storage.local.get();
+      })
+      .then((localStorage) => {
+        const currentState = lookupStoredUrlState(matchingSite, localStorage);
+        currentState.matchingSite = matchingSite;
+        currentState.domain = currentDomain;
+        resolve(currentState);
+      })
+      .catch(reject);
+  });
 }
 
 function getDomainFromUrl(url) {
