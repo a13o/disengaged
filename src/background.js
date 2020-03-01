@@ -107,27 +107,19 @@ let matchPatternCache = {};
   browser.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
     if (!tab.active) { return; }
 
-    // Clears activeOrigin until the page is done loading
+    // Clears activeHostPermission until the page is done loading
     activeHostPermission = null;
 
     if (tab.status !== 'complete') { return; }
 
-    browser.tabs.query({ active : true, currentWindow : true }).then((tabs) => {
-      const activeUrl = new URL(tabs[0].url);
+    const activeUrl = new URL(tab.url);
+    if (activeUrl.origin && activeUrl.origin !== 'null') {
+      activeHostPermission = findMatchingSiteForOrigin(activeUrl.origin);
+    }
 
-      if (!activeUrl.origin || activeUrl.origin === 'null') {
-        activeHostPermission = null;
-
-        updateIcon(false);
-      } else {
-        activeHostPermission = findMatchingSiteForOrigin(activeUrl.origin);
-
-        browser.tabs.sendMessage(tab.id, { v: 1 }).then((loaded) => {
-          updateIcon(loaded);
-        }).catch(() => {
-          updateIcon(false);
-        });
-      }
+    queryForInjected(tabId).then((alreadyInjected) => {
+      enabled = alreadyInjected;
+      updateIcon(enabled);
     });
   });
   
@@ -153,6 +145,20 @@ let matchPatternCache = {};
 
 // ## Helper Functions
 
+/**
+ * @returns {Promise}
+ * @resolves {Boolean}
+ */
+function queryForInjected(tabId) {
+  return new Promise((resolve) => {
+    browser.tabs.sendMessage(tabId, { v : 1 }).then((loaded) => {
+      resolve(!!loaded);
+    }).catch(() => {
+      resolve(false);
+    });
+  });
+}
+
 function updateIcon(enabled) {
   browser.browserAction.setTitle({
     title: `Disengaged (${enabled ? 'on' : 'off'})`
@@ -171,7 +177,7 @@ function insertScripts(hostPermission) {
   });
 
   siteData.files
-    .filter(file => file.match(/.*\.css$/))
+    .filter(file => file.endsWith('.css'))
     .map(file => `/${siteData.folder}/${file}`)
     .map(file => browser.tabs.insertCSS({
       allFrames: siteData.allFrames,
@@ -184,7 +190,7 @@ function insertScripts(hostPermission) {
     }));
 
   siteData.files
-    .filter(file => file.match(/.*\.js$/))
+    .filter(file => file.endsWith('.js'))
     .map(file => `/${siteData.folder}/${file}`)
     .map(file => browser.tabs.executeScript({
       allFrames: siteData.allFrames,
