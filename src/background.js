@@ -3,7 +3,8 @@
 // ## Constants
 
 const GLOBAL_SCRIPTS = [
-  'src/_utils.js'
+  'src/_loaded.js',
+  'src/_utils.js',
 ];
 
 const CONTENT_SCRIPTS = [
@@ -92,73 +93,114 @@ const CONTENT_SCRIPTS = [
   }
 ];
 
-let isEnabled = true;
-let registeredContentScripts = [];
 let matchPatternCache = {};
-
-
-// ## WebExtension Hooks
-
-browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
-  switch (request.id) {
-  case 'toggle':
-    toggle();
-    return;
-  case 'fetch-url-state':
-    fetchUrlState()
-      .then(sendResponse);
-    return true; // keeps sendResponse channel open
-  }
-});
 
 
 // ## Entry point
 
 (function main() {
-  updateIcon();
-  updateContentScripts();
+  let enabled = false;
+  let activeHostPermission = null;
+
+  updateIcon(enabled);
+
+  browser.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
+    if (!tab.active) { return; }
+
+    // Clears activeOrigin until the page is done loading
+    activeHostPermission = null;
+
+    if (tab.status !== 'complete') { return; }
+
+    browser.tabs.query({ active : true, currentWindow : true }).then((tabs) => {
+      const activeUrl = new URL(tabs[0].url);
+
+      if (!activeUrl.origin || activeUrl.origin === 'null') {
+        activeHostPermission = null;
+
+        updateIcon(false);
+      } else {
+        activeHostPermission = findMatchingSiteForOrigin(activeUrl.origin);
+
+        browser.tabs.sendMessage(tab.id, { v: 1 }).then((loaded) => {
+          updateIcon(loaded);
+        }).catch(() => {
+          updateIcon(false);
+        });
+      }
+    });
+  });
+  
+  browser.browserAction.onClicked.addListener(() => {
+    if (!activeHostPermission) { return; }
+
+    browser.permissions.request({
+      origins: [activeHostPermission],
+    }).then((approved) => {
+      if (approved) {
+        enabled = !enabled;
+        updateIcon(enabled);
+        if (enabled) {
+          insertScripts(activeHostPermission);
+        } else {
+          browser.tabs.reload();
+        }
+      }
+    });
+  });
 })();
 
 
 // ## Helper Functions
 
-function fetchUrlState() {
-  return new Promise((resolve, reject) => {
-    let currentDomain;
-    let matchingSite;
-    browser.tabs
-      .query({ active: true, currentWindow: true })
-      .then((tabs) => {
-        currentDomain = getDomainFromUrl(tabs[0].url);
-        matchingSite = findMatchingSiteForDomain(currentDomain);
+function updateIcon(enabled) {
+  browser.browserAction.setTitle({
+    title: `Disengaged (${enabled ? 'on' : 'off'})`
+  });
 
-        return browser.storage.local.get();
-      })
-      .then((localStorage) => {
-        const currentState = lookupStoredUrlState(matchingSite, localStorage);
-        currentState.matchingSite = matchingSite;
-        currentState.domain = currentDomain;
-        resolve(currentState);
-      })
-      .catch(reject);
+  // Mobile Firefox doesn't support setIcon
+  if (!browser.browserAction.setIcon) { return; }
+  browser.browserAction.setIcon({
+    path: enabled ? '/icons/icon_48_on.png' : '/icons/icon_48_off.png'
   });
 }
 
-function getDomainFromUrl(url) {
-  const a = document.createElement('a');
-  a.setAttribute('href', url);
-  return `${a.protocol}//${a.hostname}`;
+function insertScripts(hostPermission) {
+  const siteData = CONTENT_SCRIPTS.find((contentScript) => {
+    return contentScript.matches === hostPermission;
+  });
+
+  siteData.files
+    .filter(file => file.match(/.*\.css$/))
+    .map(file => `/${siteData.folder}/${file}`)
+    .map(file => browser.tabs.insertCSS({
+      allFrames: siteData.allFrames,
+      file
+    }));
+
+  GLOBAL_SCRIPTS
+    .map(file => browser.tabs.executeScript({
+      file,
+    }));
+
+  siteData.files
+    .filter(file => file.match(/.*\.js$/))
+    .map(file => `/${siteData.folder}/${file}`)
+    .map(file => browser.tabs.executeScript({
+      allFrames: siteData.allFrames,
+      file,
+    }));
 }
 
-function findMatchingSiteForDomain(domain) {
+function findMatchingSiteForOrigin(origin) {
   const matchingScript = CONTENT_SCRIPTS.find((contentScript) => {
     const regex = matchPatternToRegExp(contentScript.matches);
     // See if it matches the main pattern
-    if (regex.test(domain)) {
+    if (regex.test(origin)) {
       // Make sure it isn't in the excludes list
       const excludes = contentScript.excludeMatches;
       const isExcluded = excludes && excludes.some((exclude) => {
-        return matchPatternToRegExp(exclude).test(domain);
+        return matchPatternToRegExp(exclude).test(origin);
       });
       if (!isExcluded) {
         return contentScript.matches;
@@ -166,79 +208,6 @@ function findMatchingSiteForDomain(domain) {
     }
   });
   return matchingScript && matchingScript.matches;
-}
-
-function toggle() {
-  isEnabled = !isEnabled;
-  updateIcon();
-  updateContentScripts();
-  browser.tabs.reload();
-}
-
-function updateIcon() {
-  browser.browserAction.setTitle({
-    title: `Disengaged (${isEnabled ? 'on' : 'off'})`
-  });
-
-  // Mobile Firefox doesn't support setIcon
-  if (!browser.browserAction.setIcon) { return; }
-  browser.browserAction.setIcon({
-    path: isEnabled ? 'icons/icon_48_on.png' : 'icons/icon_48_off.png'
-  });
-}
-
-function updateContentScripts() {
-  isEnabled ? registerContentScripts() : unregisterContentScripts();
-}
-
-function unregisterContentScripts() {
-  registeredContentScripts.forEach(rcs => rcs.unregister());
-  registeredContentScripts = [];
-}
-
-function registerContentScripts() {
-  // todo: browser.storage.sync.get(), only register scripts for enabled sites
-  CONTENT_SCRIPTS.forEach((contentScript) => {
-    browser.contentScripts.register({
-      matches: [contentScript.matches],
-      excludeMatches: contentScript.excludeMatches,
-      allFrames: !!contentScript.allFrames,
-      css: contentScript.files
-        .filter(file => file.match(/.*\.css$/))
-        .map((file) => { return { file: `${contentScript.folder}/${file}` }; }),
-      js: [].concat(
-        GLOBAL_SCRIPTS
-          .map((file) => { return { file }; }),
-        contentScript.files
-          .filter(file => file.match(/.*\.js$/))
-          .map((file) => { return { file: `${contentScript.folder}/${file}` }; })
-      )
-    }).then((rcs) => {
-      registeredContentScripts.push(rcs);
-    });
-  });
-}
-
-/**
- * If the url is not supported, the plugin does not modify the site.
- * Returns { supported: false, exists: false, state: false }.
- *
- * If the url is not present in storage, this is the first time visiting the url.
- * Returns { supported: true, exists: false, state: false }
- *
- * If the url is in storage, return whether the plugin is enabled or not.
- * Returns { supported: true, exists: true, state: true|false }
- *
- * @param {String} urlKey the `matches` key from the content scripts config
- * @param {browser.storage.StorageArea} localStorage
- * @return {{ supported: Boolean, exists: Boolean, state: Boolean }}
- */
-function lookupStoredUrlState(urlKey, localStorage) {
-  return {
-    supported: !!urlKey,
-    exists: localStorage.hasOwnProperty(urlKey),
-    state: !!localStorage[urlKey],
-  };
 }
 
 /**
