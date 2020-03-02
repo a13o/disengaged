@@ -99,44 +99,61 @@ let matchPatternCache = {};
 // ## Entry point
 
 (function main() {
-  let enabled = false;
-  let activeHostPermission = null;
+  /**
+   * @type {Object.<string, boolean>}
+   */
+  let enabledStatus = {};
 
-  updateIcon(enabled);
+  /**
+   * The browser_action click handler needs data from two separate async calls,
+   * permissions.request and tabs.query. Due to the user interaction requirement
+   * when requesting permissions, we can't afford to tabs.query. So we need to
+   * cache the active tab's permission during the tabs.onUpdated handler.
+   * @type {?string}
+   */
+  let activeTabPermission = null;
 
   browser.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
-    if (!tab.active) { return; }
-
-    // Clears activeHostPermission until the page is done loading
-    activeHostPermission = null;
-
+    // Wait for tabs to be done loading before doing anything
     if (tab.status !== 'complete') { return; }
 
-    const activeUrl = new URL(tab.url);
-    if (activeUrl.origin && activeUrl.origin !== 'null') {
-      activeHostPermission = findMatchingSiteForOrigin(activeUrl.origin);
+    const origin = (new URL(tab.url)).origin;
+    const permission = findPermissionForOrigin(origin);
+    const enabled = enabledStatus[permission];
+
+    if (tab.active) {
+      activeTabPermission = permission;
+      updateIcon(enabled);
     }
 
-    queryForInjected(tabId).then((alreadyInjected) => {
-      enabled = alreadyInjected;
-      updateIcon(enabled);
-    });
+    // For tabs that are already enabled, automatically insert scripts
+    if (enabled) {
+      queryForInjected(tabId).then((alreadyInjected) => {
+        if (alreadyInjected) { return; }
+        insertScripts(permission, tabId);
+      });
+    }
   });
-  
+
   browser.browserAction.onClicked.addListener(() => {
-    if (!activeHostPermission) { return; }
+    if (!activeTabPermission) { return; }
+
+    const enabled = !!enabledStatus[activeTabPermission];
+
+    if (enabled) {
+      enabledStatus[activeTabPermission] = false;
+      updateIcon(false);
+      browser.tabs.reload();
+      return;
+    }
 
     browser.permissions.request({
-      origins: [activeHostPermission],
+      origins: [activeTabPermission],
     }).then((approved) => {
       if (approved) {
-        enabled = !enabled;
-        updateIcon(enabled);
-        if (enabled) {
-          insertScripts(activeHostPermission);
-        } else {
-          browser.tabs.reload();
-        }
+        enabledStatus[activeTabPermission] = true;
+        insertScripts(activeTabPermission);
+        updateIcon(true);
       }
     });
   });
@@ -147,7 +164,7 @@ let matchPatternCache = {};
 
 /**
  * @returns {Promise}
- * @resolves {Boolean}
+ * @resolves {boolean}
  */
 function queryForInjected(tabId) {
   return new Promise((resolve) => {
@@ -171,7 +188,11 @@ function updateIcon(enabled) {
   });
 }
 
-function insertScripts(hostPermission) {
+/**
+ * @param {string} hostPermission
+ * @param {?number} tabId
+ */
+function insertScripts(hostPermission, tabId) {
   const siteData = CONTENT_SCRIPTS.find((contentScript) => {
     return contentScript.matches === hostPermission;
   });
@@ -179,26 +200,36 @@ function insertScripts(hostPermission) {
   siteData.files
     .filter(file => file.endsWith('.css'))
     .map(file => `/${siteData.folder}/${file}`)
-    .map(file => browser.tabs.insertCSS({
+    .map(file => browser.tabs.insertCSS(tabId, {
       allFrames: siteData.allFrames,
       file
     }));
 
   GLOBAL_SCRIPTS
-    .map(file => browser.tabs.executeScript({
+    .map(file => browser.tabs.executeScript(tabId, {
       file,
     }));
 
   siteData.files
     .filter(file => file.endsWith('.js'))
     .map(file => `/${siteData.folder}/${file}`)
-    .map(file => browser.tabs.executeScript({
+    .map(file => browser.tabs.executeScript(tabId, {
       allFrames: siteData.allFrames,
       file,
     }));
 }
 
-function findMatchingSiteForOrigin(origin) {
+/**
+ * @param {?string} origin
+ * @returns {?string}
+ */
+function findPermissionForOrigin(origin) {
+  // Special browser tabs such as 'about:debugging' either don't have origins or
+  // have a weird 'null' origin.
+  if (!origin || origin === 'null') {
+    return null;
+  }
+
   const matchingScript = CONTENT_SCRIPTS.find((contentScript) => {
     const regex = matchPatternToRegExp(contentScript.matches);
     // See if it matches the main pattern
