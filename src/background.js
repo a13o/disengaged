@@ -123,7 +123,7 @@ let matchPatternCache = {};
 
     if (tab.active) {
       activeTabPermission = permission;
-      updateIcon(enabled);
+      updateIcon(!!enabled, permission);
     }
 
     // For tabs that are already enabled, automatically insert scripts
@@ -142,7 +142,7 @@ let matchPatternCache = {};
 
     if (enabled) {
       enabledStatus[activeTabPermission] = false;
-      updateIcon(false);
+      updateIcon(false, activeTabPermission);
       browser.tabs.reload();
       return;
     }
@@ -153,7 +153,7 @@ let matchPatternCache = {};
       if (approved) {
         enabledStatus[activeTabPermission] = true;
         insertScripts(activeTabPermission);
-        updateIcon(true);
+        updateIcon(true, activeTabPermission);
       }
     });
   });
@@ -176,16 +176,30 @@ function queryForInjected(tabId) {
   });
 }
 
-function updateIcon(enabled) {
+/**
+ * @param {boolean} enabled
+ * @param {string} permission
+ */
+function updateIcon(enabled, permission) {
   browser.browserAction.setTitle({
     title: `Disengaged (${enabled ? 'on' : 'off'})`
   });
 
   // Mobile Firefox doesn't support setIcon
-  if (!browser.browserAction.setIcon) { return; }
-  browser.browserAction.setIcon({
-    path: enabled ? '/icons/icon_48_on.png' : '/icons/icon_48_off.png'
-  });
+  if (browser.browserAction.setIcon) {
+    browser.browserAction.setIcon({
+      path: enabled ? '/icons/icon_48_on.png' : '/icons/icon_48_off.png'
+    });
+  }
+
+  // Mobile Firefox doesn't support setBadgeText
+  if (browser.browserAction.setBadgeText) {
+    const text = (!enabled && permission) ? '⏵' : '';
+    browser.browserAction.setBadgeText({ text });
+    browser.browserAction.setBadgeBackgroundColor({
+      color: [0, 217, 0, 255],
+    });
+  }
 }
 
 /**
