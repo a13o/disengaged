@@ -121,16 +121,30 @@ let matchPatternCache = {};
     const permission = findPermissionForOrigin(origin);
     const enabled = enabledStatus[permission];
 
+    // Make sure the icon always reflects the active tab's status
     if (tab.active) {
       activeTabPermission = permission;
       updateIcon(!!enabled, permission);
     }
 
-    // For tabs that are already enabled, automatically insert scripts
     if (enabled) {
+      // For tabs that are already enabled, automatically insert scripts
       queryForInjected(tabId).then((alreadyInjected) => {
         if (alreadyInjected) { return; }
         insertScripts(permission, tabId);
+      });
+    } else if (enabled === undefined && permission) {
+      // The enabledStatus cache might not be warmed up yet; manually check
+      // permissions and automatically insert scripts if needed
+      browser.permissions.contains({
+        origins: [permission],
+      }).then((approved) => {
+        if (!approved) { return; }
+        enabledStatus[activeTabPermission] = true;
+        insertScripts(permission, tabId);
+        if (tab.active) {
+          updateIcon(true, permission);
+        }
       });
     }
   });
