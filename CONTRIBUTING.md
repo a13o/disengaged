@@ -37,11 +37,17 @@ The most common way to start is with a concrete use case demonstrating what you 
 This project uses [mozilla/web-ext](https://github.com/mozilla/web-ext) for a nice developer experience. It launches a sandbox browser with the extension loaded, and supports livereload. To get set up:
 
 1. Clone the repo.
-1. `npm i`
+1. `npm install`
 
 ### Firefox Development
 
 1. `npm run start:firefox`
+
+### Firefox for Android Development
+
+1. Configure an Android target by following [Mozilla's setup instructions](https://extensionworkshop.com/documentation/develop/developing-extensions-for-firefox-for-android/#set-up-your-computer-and-android-emulator-or-device).
+1. `npm run start:firefox-android`
+1. Follow the prompts coming from web-ext. For example, you may need to specify your Android device ID with: `npm run start:firefox-android -- --android-device=<your device ID>`. Note the standalone double hyphen param (`--`) which tells npm to pass subsequent args through to the run script.
 
 ### Chrome Development
 

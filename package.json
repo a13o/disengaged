@@ -4,7 +4,9 @@
   "version": "0.0.1",
   "description": "The internet sux rn so I deleted the bad parts",
   "scripts": {
+    "build": "web-ext build",
     "start:firefox": "web-ext run",
+    "start:firefox-android": "web-ext run --target=firefox-android",
     "test": "web-ext lint -w"
   },
   "repository": {

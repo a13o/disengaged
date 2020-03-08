@@ -9,10 +9,10 @@
     "48": "icons/icon_48_on.png",
     "96": "icons/icon_96_on.png"
   },
-  "applications": {
+  "browser_specific_settings": {
     "gecko": {
       "id": "disengaged@a13o.com",
-      "strict_min_version": "59"
+      "strict_min_version": "59.0"
     }
   },
   "browser_action": {
