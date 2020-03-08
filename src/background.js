@@ -104,16 +104,7 @@ let matchPatternCache = {};
    */
   let enabledStatus = {};
 
-  /**
-   * The browser_action click handler needs data from two separate async calls,
-   * permissions.request and tabs.query. Due to the user interaction requirement
-   * when requesting permissions, we can't afford to tabs.query. So we need to
-   * cache the active tab's permission during the tabs.onUpdated handler.
-   * @type {?string}
-   */
-  let activeTabPermission = null;
-
-  browser.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
+  browser.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
     // Wait for tabs to be done loading before doing anything
     if (tab.status !== 'complete') { return; }
 
@@ -123,7 +114,6 @@ let matchPatternCache = {};
 
     // Make sure the icon always reflects the active tab's status
     if (tab.active) {
-      activeTabPermission = permission;
       updateIcon(!!enabled, permission);
     }
 
@@ -140,7 +130,7 @@ let matchPatternCache = {};
         origins: [permission],
       }).then((approved) => {
         if (!approved) { return; }
-        enabledStatus[activeTabPermission] = true;
+        enabledStatus[permission] = true;
         insertScripts(permission, tabId);
         if (tab.active) {
           updateIcon(true, permission);
@@ -149,25 +139,27 @@ let matchPatternCache = {};
     }
   });
 
-  browser.browserAction.onClicked.addListener(() => {
-    if (!activeTabPermission) { return; }
+  browser.browserAction.onClicked.addListener(function (tab) {
+    const origin = (new URL(tab.url)).origin;
+    const permission = findPermissionForOrigin(origin);
+    if (!permission) { return; }
 
-    const enabled = !!enabledStatus[activeTabPermission];
+    const enabled = enabledStatus[permission];
 
     if (enabled) {
-      enabledStatus[activeTabPermission] = false;
-      updateIcon(false, activeTabPermission);
+      enabledStatus[permission] = false;
+      updateIcon(false, permission);
       browser.tabs.reload();
       return;
     }
 
     browser.permissions.request({
-      origins: [activeTabPermission],
+      origins: [permission],
     }).then((approved) => {
       if (approved) {
-        enabledStatus[activeTabPermission] = true;
-        insertScripts(activeTabPermission);
-        updateIcon(true, activeTabPermission);
+        enabledStatus[permission] = true;
+        insertScripts(permission);
+        updateIcon(true, permission);
       }
     });
   });
