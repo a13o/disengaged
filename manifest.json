@@ -19,6 +19,11 @@
     "default_icon": "icons/icon_48_on.png",
     "default_title": "Disengaged"
   },
+  "options_ui": {
+    "page": "src/options.html",
+    "open_in_tab": true,
+    "browser_style": true
+  },
   "background": {
     "scripts": [
       "src/background.js"

@@ -117,6 +117,10 @@ let matchPatternCache = {};
       updateIcon(!!enabled, permission);
     }
 
+    // todo: if already injected, and permission is denied, they must have
+    //  revoked the permission. show an [!] on the browser_action and
+    //  give them some context in the popup, as well as a reload page button
+
     if (enabled) {
       // For tabs that are already enabled, automatically insert scripts
       queryForInjected(tabId).then((alreadyInjected) => {
@@ -140,28 +144,33 @@ let matchPatternCache = {};
   });
 
   browser.browserAction.onClicked.addListener(function (tab) {
-    const origin = (new URL(tab.url)).origin;
-    const permission = findPermissionForOrigin(origin);
-    if (!permission) { return; }
 
-    const enabled = enabledStatus[permission];
+    // todo: a nice popup page with a button that loads the options. this page
+    //  can also tell the user if the current site is supported
 
-    if (enabled) {
-      enabledStatus[permission] = false;
-      updateIcon(false, permission);
-      browser.tabs.reload();
-      return;
-    }
+    browser.runtime.openOptionsPage();
+    // const origin = (new URL(tab.url)).origin;
+    // const permission = findPermissionForOrigin(origin);
+    // if (!permission) { return; }
 
-    browser.permissions.request({
-      origins: [permission],
-    }).then((approved) => {
-      if (approved) {
-        enabledStatus[permission] = true;
-        insertScripts(permission);
-        updateIcon(true, permission);
-      }
-    });
+    // const enabled = enabledStatus[permission];
+
+    // if (enabled) {
+    //   enabledStatus[permission] = false;
+    //   updateIcon(false, permission);
+    //   browser.tabs.reload();
+    //   return;
+    // }
+
+    // browser.permissions.request({
+    //   origins: [permission],
+    // }).then((approved) => {
+    //   if (approved) {
+    //     enabledStatus[permission] = true;
+    //     insertScripts(permission);
+    //     updateIcon(true, permission);
+    //   }
+    // });
   });
 })();
 
