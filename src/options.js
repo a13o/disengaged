@@ -3,36 +3,36 @@
 (function main() {
   // todo: get this from the background script
   const model = {
-    permissions: [
+    sites: [
       {
         id: 'Hacker News',
         displayName: 'Hacker News',
-        origin: '*://*.news.ycombinator.com/*',
+        permission: '*://*.news.ycombinator.com/*',
       },
       {
         id: 'Twitter',
         displayName: 'Twitter',
-        origin: '*://*.twitter.com/*',
+        permission: '*://*.twitter.com/*',
       },
       {
         id: 'YouTube',
         displayName: 'YouTube',
-        origin: '*://*.youtube.com/*',
+        permission: '*://*.youtube.com/*',
       },
       {
         id: 'YouTube Gaming',
         displayName: 'YouTube Gaming',
-        origin: '*://*.gaming.youtube.com/*',
+        permission: '*://*.gaming.youtube.com/*',
       },
       {
         id: 'YouTube Music',
         displayName: 'YouTube Music',
-        origin: '*://*.music.youtube.com/*',
+        permission: '*://*.music.youtube.com/*',
       },
       {
         id: 'Reddit',
         displayName: 'Reddit',
-        origin: '*://*.reddit.com/r/*',
+        permission: '*://*.reddit.com/r/*',
       },
     ],
   };
@@ -43,8 +43,8 @@
   const $permissions = document.getElementById('permissions');
 
   let i = 1;
-  model.permissions.forEach((perm) => {
-    const id = `permission_${i}`;
+  model.sites.forEach((site) => {
+    const id = `permission_${i++}`;
 
     const $li = document.createElement('li');
     $permissions.appendChild($li);
@@ -56,13 +56,16 @@
 
     const $label = document.createElement('label');
     $label.setAttribute('for', id);
-    $label.textContent = `${perm.displayName} (${perm.origin})`;
+    $label.textContent = `${site.displayName} (${site.permission})`;
     $li.appendChild($label);
 
-    $checkbox.dataset.perm = perm.id;
-    $checkbox.addEventListener('change', onChange);
-
-    i += 1;
+    browser.permissions.contains({
+      origins: [site.permission],
+    }).then((approved) => {
+      $checkbox.checked = approved;
+      $checkbox.dataset.site = site.id;
+      $checkbox.addEventListener('change', onChange);
+    });
   });
 
   const $save = document.getElementById('save');
@@ -86,16 +89,16 @@
 
   function onChange(event) {
     const $checkbox = event.currentTarget;
-    const perm = model.permissions.find(perm => perm.id === $checkbox.dataset.perm);
+    const site = model.sites.find(site => site.id === $checkbox.dataset.site);
 
     const insertArr = $checkbox.checked ? toAdd : toRemove;
     const unsavedArr = $checkbox.checked ? toRemove : toAdd;
 
-    const unsavedIdx = unsavedArr.indexOf(perm.origin);
+    const unsavedIdx = unsavedArr.indexOf(site.permission);
     if (unsavedIdx >= 0) {
       unsavedArr.splice(unsavedIdx, 1);
     } else {
-      insertArr.push(perm.origin);
+      insertArr.push(site.permission);
     }
   }
 }());
