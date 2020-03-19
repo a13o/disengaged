@@ -93,91 +93,89 @@ const CONTENT_SCRIPTS = [
   }
 ];
 
+/**
+ * @typedef {number} IconState
+ * @enum {IconState}
+ */
+const IconState = {
+  SUPPORTED: 0,
+  NEEDS_PERMISSION: 1,
+  NEEDS_REFRESH: 2,
+  NOT_SUPPORTED: 3,
+};
+
 let matchPatternCache = {};
 
 
 // ## Entry point
 
 (function main() {
-  /**
-   * @type {Object.<string, boolean>}
-   */
-  let enabledStatus = {};
+  browser.tabs.onUpdated.addListener(onTabUpdated); 
 
-  browser.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
-    // Wait for tabs to be done loading before doing anything
-    if (tab.status !== 'complete') { return; }
-
-    const origin = (new URL(tab.url)).origin;
-    const permission = findPermissionForOrigin(origin);
-    const enabled = enabledStatus[permission];
-
-    // Make sure the icon always reflects the active tab's status
-    if (tab.active) {
-      updateIcon(!!enabled, permission);
-    }
-
-    // todo: if already injected, and permission is denied, they must have
-    //  revoked the permission. show an [!] on the browser_action and
-    //  give them some context in the popup, as well as a reload page button
-
-    if (enabled) {
-      // For tabs that are already enabled, automatically insert scripts
-      queryForInjected(tabId).then((alreadyInjected) => {
-        if (alreadyInjected) { return; }
-        insertScripts(permission, tabId);
-      });
-    } else if (enabled === undefined && permission) {
-      // The enabledStatus cache might not be warmed up yet; manually check
-      // permissions and automatically insert scripts if needed
-      browser.permissions.contains({
-        origins: [permission],
-      }).then((approved) => {
-        if (!approved) { return; }
-        enabledStatus[permission] = true;
-        insertScripts(permission, tabId);
-        if (tab.active) {
-          updateIcon(true, permission);
-        }
-      });
-    }
-  });
-
-  browser.browserAction.onClicked.addListener(function (tab) {
-
+  browser.browserAction.onClicked.addListener(function () {
     // todo: a nice popup page with a button that loads the options. this page
     //  can also tell the user if the current site is supported
 
     browser.runtime.openOptionsPage();
-    // const origin = (new URL(tab.url)).origin;
-    // const permission = findPermissionForOrigin(origin);
-    // if (!permission) { return; }
-
-    // const enabled = enabledStatus[permission];
-
-    // if (enabled) {
-    //   enabledStatus[permission] = false;
-    //   updateIcon(false, permission);
-    //   browser.tabs.reload();
-    //   return;
-    // }
-
-    // browser.permissions.request({
-    //   origins: [permission],
-    // }).then((approved) => {
-    //   if (approved) {
-    //     enabledStatus[permission] = true;
-    //     insertScripts(permission);
-    //     updateIcon(true, permission);
-    //   }
-    // });
   });
 })();
+
+/**
+ * 
+ * @param {number} tabId 
+ * @param {object} changeInfo 
+ * @param {tabs.Tab} tab 
+ */
+function onTabUpdated(tabId, changeInfo, tab) {
+  // Wait for tabs to be done loading before doing anything
+  if (tab.status !== 'complete') { return; }
+
+  const origin = (new URL(tab.url)).origin;
+  const foundPerm = findPermissionForOrigin(origin);
+
+  Promise.all([
+    foundPerm,
+    new Promise((resolve) => {
+      if (foundPerm) {
+        browser.permissions.contains({
+          origins: [foundPerm],
+        }).then(resolve);
+      } else {
+        resolve(false);
+      }
+    }),
+    queryForInjected(tabId),
+  ]).then((results) => {
+    const [permission, approved, injected] = results;
+
+    let iconState = IconState.NOT_SUPPORTED;
+
+    if (permission && !approved && injected) {
+      // todo: they must have revoked the permission. give them some context in
+      // the popup, as well as a reload page button
+      iconState = IconState.NEEDS_REFRESH;
+    } else if (permission && !approved && !injected) {
+      iconState = IconState.NEEDS_PERMISSION;
+    } else if (permission && approved && !injected) {
+      insertScripts(permission, tabId);
+      iconState = IconState.SUPPORTED;
+    } else if (permission && approved && injected) {
+      iconState = IconState.SUPPORTED;
+    }
+
+    // The icon should always reflect the active tab
+    if (tab.active) {
+      updateIcon(iconState);
+    }
+  });
+}
 
 
 // ## Helper Functions
 
 /**
+ * Rather than use this whole ping/pong system, can it just remember the tab
+ * ids? Need to read how browsers assign tab ids.
  * @returns {Promise}
  * @resolves {boolean}
  */
@@ -192,28 +190,46 @@ function queryForInjected(tabId) {
 }
 
 /**
- * @param {boolean} enabled
- * @param {string} permission
+ * @param {IconState} iconState
  */
-function updateIcon(enabled, permission) {
-  browser.browserAction.setTitle({
-    title: `Disengaged (${enabled ? 'on' : 'off'})`
-  });
+function updateIcon(iconState) {
+  let badgeText = null;
+  let colorIcon = true;
+
+  switch (iconState) {
+  case IconState.SUPPORTED:
+    break;
+  case IconState.NEEDS_PERMISSION:
+    badgeText = '+';
+    break;
+  case IconState.NEEDS_REFRESH:
+    badgeText = '!';
+    break;
+  default:
+  case IconState.NOT_SUPPORTED:
+    colorIcon = false;
+    break;
+  }
+
+  let title = 'Disengaged';
+  if (badgeText) {
+    title += ` (${badgeText})`;
+  }
+  browser.browserAction.setTitle({ title });
 
   // Mobile Firefox doesn't support setIcon
   if (browser.browserAction.setIcon) {
     browser.browserAction.setIcon({
-      path: enabled ? '/icons/icon_48_on.png' : '/icons/icon_48_off.png'
+      path: colorIcon ? '/icons/icon_48_on.png' : '/icons/icon_48_off.png'
     });
   }
 
   // Mobile Firefox doesn't support setBadgeText
   if (browser.browserAction.setBadgeText) {
-    const text = (!enabled && permission) ? '⏵' : '';
-    browser.browserAction.setBadgeText({ text });
-    browser.browserAction.setBadgeBackgroundColor({
-      color: [0, 217, 0, 255],
-    });
+    browser.browserAction.setBadgeText({ text: badgeText });
+    // browser.browserAction.setBadgeBackgroundColor({
+    //   color: [0, 217, 0, 255],
+    // });
   }
 }
 
@@ -273,7 +289,7 @@ function findPermissionForOrigin(origin) {
       }
     }
   });
-  return matchingScript && matchingScript.matches;
+  return matchingScript && matchingScript.matches || null;
 }
 
 /**
