@@ -104,13 +104,17 @@ const IconState = {
   NOT_SUPPORTED: 3,
 };
 
+/**
+ * Used by `matchPatternToRegExp` to memoify `_matchPatternToRegExp`
+ * @type {Object.<string, string>}
+ */
 let matchPatternCache = {};
 
 
 // ## Entry point
 
 (function main() {
-  browser.tabs.onUpdated.addListener(onTabUpdated); 
+  browser.tabs.onUpdated.addListener(onTabUpdated);
 
   browser.browserAction.onClicked.addListener(function () {
     // todo: a nice popup page with a button that loads the options. this page
@@ -121,7 +125,6 @@ let matchPatternCache = {};
 })();
 
 /**
- * 
  * @param {number} tabId 
  * @param {object} changeInfo 
  * @param {tabs.Tab} tab 
@@ -135,15 +138,7 @@ function onTabUpdated(tabId, changeInfo, tab) {
 
   Promise.all([
     foundPerm,
-    new Promise((resolve) => {
-      if (foundPerm) {
-        browser.permissions.contains({
-          origins: [foundPerm],
-        }).then(resolve);
-      } else {
-        resolve(false);
-      }
-    }),
+    queryForApproved(foundPerm),
     queryForInjected(tabId),
   ]).then((results) => {
     const [permission, approved, injected] = results;
@@ -174,10 +169,26 @@ function onTabUpdated(tabId, changeInfo, tab) {
 // ## Helper Functions
 
 /**
+ * @param {string} permission
+ * @returns {Promise<boolean>} user has granted the host permission or not
+ */
+function queryForApproved(permission) {
+  return new Promise((resolve) => {
+    if (permission) {
+      browser.permissions.contains({
+        origins: [permission],
+      }).then(resolve);
+    } else {
+      resolve(false);
+    }
+  });
+}
+
+/**
  * Rather than use this whole ping/pong system, can it just remember the tab
  * ids? Need to read how browsers assign tab ids.
- * @returns {Promise}
- * @resolves {boolean}
+ * @param {number} tabId
+ * @returns {Promise<boolean>} tab already has scripts injected or not
  */
 function queryForInjected(tabId) {
   return new Promise((resolve) => {
@@ -193,14 +204,16 @@ function queryForInjected(tabId) {
  * @param {IconState} iconState
  */
 function updateIcon(iconState) {
-  let badgeText = null;
+  let badgeText = null; // falsey text 'hides' the badge entirely
+  let badgeColor = null; // default color is red
   let colorIcon = true;
 
   switch (iconState) {
   case IconState.SUPPORTED:
     break;
   case IconState.NEEDS_PERMISSION:
-    badgeText = '+';
+    badgeText = '✚';
+    badgeColor = [0, 217, 0, 255];
     break;
   case IconState.NEEDS_REFRESH:
     badgeText = '!';
@@ -217,19 +230,19 @@ function updateIcon(iconState) {
   }
   browser.browserAction.setTitle({ title });
 
-  // Mobile Firefox doesn't support setIcon
+  // Mobile Firefox doesn't support icons
   if (browser.browserAction.setIcon) {
     browser.browserAction.setIcon({
       path: colorIcon ? '/icons/icon_48_on.png' : '/icons/icon_48_off.png'
     });
   }
 
-  // Mobile Firefox doesn't support setBadgeText
+  // Mobile Firefox doesn't support setting badge text or background
   if (browser.browserAction.setBadgeText) {
     browser.browserAction.setBadgeText({ text: badgeText });
-    // browser.browserAction.setBadgeBackgroundColor({
-    //   color: [0, 217, 0, 255],
-    // });
+    browser.browserAction.setBadgeBackgroundColor({
+      color: badgeColor,
+    });
   }
 }
 
