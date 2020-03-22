@@ -9,6 +9,7 @@ const GLOBAL_SCRIPTS = [
 
 const CONTENT_SCRIPTS = [
   {
+    name: 'Hacker News',
     matches: '*://*.news.ycombinator.com/*',
     folder: 'src/hacker-news',
     files: [
@@ -22,6 +23,7 @@ const CONTENT_SCRIPTS = [
     ]
   },
   {
+    name: 'Twitter',
     matches: '*://*.twitter.com/*',
     allFrames: true,
     folder: 'src/twitter',
@@ -39,6 +41,7 @@ const CONTENT_SCRIPTS = [
     ]
   },
   {
+    name: 'YouTube',
     matches: '*://*.youtube.com/*',
     excludeMatches: [
       '*://*.gaming.youtube.com/*',
@@ -60,6 +63,7 @@ const CONTENT_SCRIPTS = [
     ]
   },
   {
+    name: 'YouTube Gaming',
     matches: '*://*.gaming.youtube.com/*',
     allFrames: true,
     folder: 'src/youtube-gaming',
@@ -72,6 +76,7 @@ const CONTENT_SCRIPTS = [
     ]
   },
   {
+    name: 'YouTube Music',
     matches: '*://*.music.youtube.com/*',
     allFrames: true,
     folder: 'src/youtube-music',
@@ -81,7 +86,8 @@ const CONTENT_SCRIPTS = [
     ]
   },
   {
-    matches: '*://*.reddit.com/r/*',
+    name: 'Reddit',
+    matches: '*://*.reddit.com/*',
     allFrames: true,
     folder: 'src/reddit',
     files: [
@@ -115,6 +121,7 @@ let matchPatternCache = {};
 
 (function main() {
   browser.tabs.onUpdated.addListener(onTabUpdated);
+  browser.runtime.onMessage.addListener(onMessage);
 
   browser.browserAction.onClicked.addListener(function () {
     // todo: a nice popup page with a button that loads the options. this page
@@ -125,9 +132,9 @@ let matchPatternCache = {};
 })();
 
 /**
- * @param {number} tabId 
- * @param {object} changeInfo 
- * @param {tabs.Tab} tab 
+ * @param {number} tabId
+ * @param {object} changeInfo
+ * @param {tabs.Tab} tab
  */
 function onTabUpdated(tabId, changeInfo, tab) {
   // Wait for tabs to be done loading before doing anything
@@ -163,6 +170,37 @@ function onTabUpdated(tabId, changeInfo, tab) {
       updateIcon(iconState);
     }
   });
+}
+
+
+// ## Message Server
+
+/**
+ * @param {*} request
+ * @param {*} sender
+ * @param {function()} sendResponse
+ */
+function onMessage(request, sender, sendResponse) {
+  switch(request.msg) {
+  case 'GET v1/options/config':
+    sendResponse(getOptionsConfig());
+    break;
+  }
+}
+
+/**
+ * @returns {OptionsConfig}
+ */
+function getOptionsConfig() {
+  return {
+    sites: CONTENT_SCRIPTS.map((entry) => {
+      return {
+        id: entry.name,
+        displayName: entry.name,
+        permission: entry.matches,
+      };
+    }),
+  };
 }
 
 

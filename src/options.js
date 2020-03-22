@@ -1,75 +1,67 @@
 /* global browser */
 
-(function main() {
-  // todo: get this from the background script
-  const model = {
-    sites: [
-      {
-        id: 'Hacker News',
-        displayName: 'Hacker News',
-        permission: '*://*.news.ycombinator.com/*',
-      },
-      {
-        id: 'Twitter',
-        displayName: 'Twitter',
-        permission: '*://*.twitter.com/*',
-      },
-      {
-        id: 'YouTube',
-        displayName: 'YouTube',
-        permission: '*://*.youtube.com/*',
-      },
-      {
-        id: 'YouTube Gaming',
-        displayName: 'YouTube Gaming',
-        permission: '*://*.gaming.youtube.com/*',
-      },
-      {
-        id: 'YouTube Music',
-        displayName: 'YouTube Music',
-        permission: '*://*.music.youtube.com/*',
-      },
-      {
-        id: 'Reddit',
-        displayName: 'Reddit',
-        permission: '*://*.reddit.com/r/*',
-      },
-    ],
-  };
+/**
+ * @typedef {Object} OptionsConfigSites
+ * @property {string} id
+ * @property {string} displayName
+ * @property {string} permission
+ */
 
+/**
+ * @typedef {Object} OptionsConfig
+ * @property {OptionsConfigSites[]} sites
+ */
+
+(function main() {
+  /** @type {OptionsConfig} */
+  let model = null;
+
+  /** @type {string[]} */
   const toAdd = [];
+
+  /** @type {string[]} */
   const toRemove = [];
 
-  const $permissions = document.getElementById('permissions');
-
-  let i = 1;
-  model.sites.forEach((site) => {
-    const id = `permission_${i++}`;
-
-    const $li = document.createElement('li');
-    $permissions.appendChild($li);
-    
-    const $checkbox = document.createElement('input');
-    $checkbox.id = id;
-    $checkbox.type = 'checkbox';
-    $li.appendChild($checkbox);
-
-    const $label = document.createElement('label');
-    $label.setAttribute('for', id);
-    $label.textContent = `${site.displayName} (${site.permission})`;
-    $li.appendChild($label);
-
-    browser.permissions.contains({
-      origins: [site.permission],
-    }).then((approved) => {
-      $checkbox.checked = approved;
-      $checkbox.dataset.site = site.id;
-      $checkbox.addEventListener('change', onChange);
-    });
+  browser.runtime.sendMessage({
+    msg: 'GET v1/options/config',
+  }).then((response) => {
+    model = response;
+    buildDocument();
   });
 
-  const $save = document.getElementById('save');
-  $save.addEventListener('click', onSave);
+  function buildDocument() {
+    const $permissions = document.getElementById('permissions');
+
+    let i = 1;
+    model.sites.forEach((site) => {
+      const id = `permission_${i++}`;
+
+      const $li = document.createElement('li');
+      $permissions.appendChild($li);
+
+      const $checkbox = document.createElement('input');
+      $checkbox.id = id;
+      $checkbox.type = 'checkbox';
+      $li.appendChild($checkbox);
+
+      const $label = document.createElement('label');
+      $label.setAttribute('for', id);
+      $label.textContent = `${site.displayName} (${site.permission})`;
+      $li.appendChild($label);
+
+      browser.permissions.contains({
+        origins: [site.permission],
+      }).then((approved) => {
+        $checkbox.checked = approved;
+        $checkbox.dataset.site = site.id;
+        $checkbox.addEventListener('change', onChange);
+      });
+    });
+
+    // todo: this button should be enabled/disabled based on changeset
+    const $save = document.getElementById('save');
+    $save.addEventListener('click', onSave);
+  }
 
   function onSave() {
     if (toAdd.length) {
@@ -78,7 +70,7 @@
       });
       toAdd.length = 0;
     }
-    
+
     if (toRemove.length) {
       browser.permissions.remove({
         origins: toRemove,
