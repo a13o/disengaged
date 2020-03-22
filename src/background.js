@@ -110,6 +110,8 @@ const IconState = {
   NOT_SUPPORTED: 3,
 };
 
+// ## Local State
+
 /**
  * Used by `matchPatternToRegExp` to memoify `_matchPatternToRegExp`
  * @type {Object.<string, string>}
@@ -117,19 +119,16 @@ const IconState = {
 let matchPatternCache = {};
 
 
-// ## Entry point
+// ## Entry Point
 
 (function main() {
   browser.tabs.onUpdated.addListener(onTabUpdated);
+  browser.browserAction.onClicked.addListener(onBrowserActionClicked);
   browser.runtime.onMessage.addListener(onMessage);
-
-  browser.browserAction.onClicked.addListener(function () {
-    // todo: a nice popup page with a button that loads the options. this page
-    //  can also tell the user if the current site is supported
-
-    browser.runtime.openOptionsPage();
-  });
 })();
+
+
+// ## Listeners
 
 /**
  * @param {number} tabId
@@ -172,8 +171,11 @@ function onTabUpdated(tabId, changeInfo, tab) {
   });
 }
 
-
-// ## Message Server
+function onBrowserActionClicked() {
+  // todo: a nice popup page with a button that loads the options. this page
+  //  can also tell the user if the current site is supported
+  browser.runtime.openOptionsPage();
+}
 
 /**
  * @param {*} request
@@ -187,6 +189,9 @@ function onMessage(request, sender, sendResponse) {
     break;
   }
 }
+
+
+// ## Message Server
 
 /**
  * @returns {OptionsConfig}
