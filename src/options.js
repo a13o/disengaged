@@ -58,8 +58,8 @@
       });
     });
 
-    // todo: this button should be enabled/disabled based on changeset
     const $save = document.getElementById('save');
+    $save.disabled = true;
     $save.addEventListener('click', onSave);
   }
 
@@ -92,5 +92,8 @@
     } else {
       insertArr.push(site.permission);
     }
+
+    const $save = document.getElementById('save');
+    $save.disabled = (toAdd.length === 0 && toRemove.length === 0);
   }
 }());
