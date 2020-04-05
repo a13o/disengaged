@@ -4,18 +4,33 @@
   <head>
     <meta charset="utf-8">
     <title>Disengaged Settings</title>
-
     <link href="options.css" rel="stylesheet">
   </head>
 
   <body>
+    <h2>Disengaged Settings</h2>
 
-    <h2>Supported Sites</h2>
+    <p>
+      Select all the sites you want Disengaged to modify, then save.
+    </p>
+    <p>
+      You will be asked for your permission when you save.
+    </p>
+
+    <h3>Supported Sites</h3>
+
     <ul id="permissions"></ul>
-    <button id="save">Save Changes</button>
+
+    <div id="control-panel">
+      <button id="save">Save Changes</button>
+      <button id="check-all">Check All</button>
+    </div>
+
+    <p id="privacy-info">
+      * You can revoke your permission at any time by unchecking and saving.
+    </p>
 
     <script src="options.js"></script>
-
   </body>
 
 </html>

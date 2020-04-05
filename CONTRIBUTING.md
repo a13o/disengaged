@@ -1,6 +1,6 @@
 Welcome, and thank you for your interest in contributing to the world's first Addiction Blocker!
 
-Disengaged is opinionated software. Instead of having a settings page to let users configure behavior, the decisions are already made for them according to a [code of ethics](CODE_OF_ETHICS.md).
+Disengaged is opinionated software. Instead of users configuring the software's behavior, decisions are already made for them according to a [code of ethics](CODE_OF_ETHICS.md).
 
 All contributions must uphold the code of ethics.
 
@@ -12,13 +12,9 @@ There are a few ways to contribute:
 
 ## I want to fix a bug
 
-🌹 _Rolls out the red carpet_ 🌹
-
 Thank you! Due to the nature of content scripts, this repo require steady maintenance. It's a community effort to keep everything working.
 
-These efforts are what allow people to continue using the plugin and providing their personal experiences and wisdom toward future improvements.
-
-In short, fixing bugs in this repo is like working in the engine room for a healthier internet.
+In many cases the host site changed their DOM structure or CSS classes and this is preventing the blocking technique from applying itself. Your PR only needs to update the selector(s) that were broken. It's a good idea to use your dev tools to browse the site at different media-query sizes, as this may reveal similar breakages.
 
 ## I want to add or modify a site
 

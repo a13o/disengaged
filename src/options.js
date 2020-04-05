@@ -28,38 +28,44 @@ const toRemove = [];
 // ## Listeners
 
 function onSave() {
-  if (toAdd.length) {
-    // todo: when the request is rejected by the user, page gets out of sync
-    browser.permissions.request({
-      origins: toAdd,
-    });
-    toAdd.length = 0;
-  }
-
   if (toRemove.length) {
     browser.permissions.remove({
       origins: toRemove,
     });
     toRemove.length = 0;
   }
+
+  if (toAdd.length) {
+    // todo: when the request is rejected by the user, page gets out of sync
+    browser.permissions.request({
+      origins: toAdd,
+    }).then((granted) => {
+      if (!granted) { return; }
+      toAdd.length = 0;
+      updateSaveAbility();
+    });
+  } else {
+    updateSaveAbility();
+  }
 }
 
 function onChange(event) {
   const $checkbox = event.currentTarget;
-  const site = model.sites.find(site => site.id === $checkbox.dataset.site);
+  updateChangeset($checkbox);
+  updateSaveAbility();
+}
 
-  const insertArr = $checkbox.checked ? toAdd : toRemove;
-  const unsavedArr = $checkbox.checked ? toRemove : toAdd;
+function onCheckAll() {
+  const $permissions = document.getElementById('permissions');
+  const $checkboxes = $permissions.querySelectorAll('input[type="checkbox"]') || [];
 
-  const unsavedIdx = unsavedArr.indexOf(site.permission);
-  if (unsavedIdx >= 0) {
-    unsavedArr.splice(unsavedIdx, 1);
-  } else {
-    insertArr.push(site.permission);
-  }
+  $checkboxes.forEach(($checkbox) => {
+    if ($checkbox.checked) { return; }
+    $checkbox.checked = true;
+    updateChangeset($checkbox);
+  });
 
-  const $save = document.getElementById('save');
-  $save.disabled = (toAdd.length === 0 && toRemove.length === 0);
+  updateSaveAbility();
 }
 
 
@@ -97,4 +103,27 @@ function buildDocument() {
   const $save = document.getElementById('save');
   $save.disabled = true;
   $save.addEventListener('click', onSave);
+
+  const $checkAll = document.getElementById('check-all');
+  $checkAll.addEventListener('click', onCheckAll);
+}
+
+function updateChangeset($checkbox) {
+  const site = model.sites.find(site => site.id === $checkbox.dataset.site);
+
+  const insertArr = $checkbox.checked ? toAdd : toRemove;
+  const unsavedArr = $checkbox.checked ? toRemove : toAdd;
+
+  const unsavedIdx = unsavedArr.indexOf(site.permission);
+  if (unsavedIdx >= 0) {
+    unsavedArr.splice(unsavedIdx, 1);
+  } else {
+    insertArr.push(site.permission);
+  }
+  console.log(unsavedArr, insertArr);
+}
+
+function updateSaveAbility() {
+  const $save = document.getElementById('save');
+  $save.disabled = (toAdd.length === 0 && toRemove.length === 0);
 }

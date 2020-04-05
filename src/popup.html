@@ -11,10 +11,23 @@
 
     <p id="domain"></p>
 
-    <p id="not-supported">This site is not currently supported.</p>
+    <p id="needs-refresh">
+      You revoked permission for this site but it was already modified.
+      To restore the original site, refresh the tab.
+    </p>
+
+    <p id="supported">
+      This site is supported.
+      It can be enabled & disabled via the button below.
+    </p>
+
+    <p id="not-supported">
+      This site is not supported.
+      Do you think it should be? <a href="https://github.com/a13o/disengaged/blob/master/CONTRIBUTING.md">Contribute!</a>
+    </p>
 
     <div id="control-panel">
-      <button id="show-options">Add/Remove Sites</button>
+      <button id="show-options">Enable/Disable Sites</button>
     </div>
 
     <script src="popup.js"></script>

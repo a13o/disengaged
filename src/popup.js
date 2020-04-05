@@ -16,20 +16,6 @@ let model = null;
     model = response;
     buildDocument();
   });
-
-  let cacheState;
-
-  document.getElementById('register-site').addEventListener('click', () => {
-    browser.permissions
-      .request({
-        origins: [cacheState.matchingSite],
-      })
-      .then((response) => {
-        if (response) {
-          browser.runtime.sendMessage({ id: 'toggle' });
-        }
-      });
-  });
 })();
 
 
@@ -39,10 +25,13 @@ function buildDocument() {
   const origin = model.origin;
   const tabState = model.tabState;
   const isSupported = tabState != 3; // aw, man. need a real type system
+  const needsRefresh = tabState === 2;
 
   setText('domain', origin);
   setVisible('domain', isSupported);
+  setVisible('supported', isSupported);
   setVisible('not-supported', !isSupported);
+  setVisible('needs-refresh', needsRefresh);
 
   const optionsBtn = document.getElementById('show-options');
   optionsBtn.addEventListener('click', () => {
