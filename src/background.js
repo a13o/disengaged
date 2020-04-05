@@ -1,5 +1,6 @@
 /* global browser */
 
+
 // ## Constants
 
 const GLOBAL_SCRIPTS = [
@@ -100,15 +101,34 @@ const CONTENT_SCRIPTS = [
 ];
 
 /**
- * @typedef {number} IconState
- * @enum {IconState}
+ * @typedef {number} TabState
+ * @enum {TabState}
  */
-const IconState = {
+const TabState = {
   SUPPORTED: 0,
   NEEDS_PERMISSION: 1,
   NEEDS_REFRESH: 2,
   NOT_SUPPORTED: 3,
 };
+
+/**
+ * @typedef {Object} OptionsConfigSites
+ * @property {string} id
+ * @property {string} displayName
+ * @property {string} permission
+ */
+
+/**
+ * @typedef {Object} OptionsConfig
+ * @property {OptionsConfigSites[]} sites
+ */
+
+/**
+ * @typedef {Object} PopupConfig
+ * @property {string} origin
+ * @property {TabState} tabState
+ */
+
 
 // ## Local State
 
@@ -118,12 +138,25 @@ const IconState = {
  */
 let matchPatternCache = {};
 
+/**
+ * Whenever the active tab changes this caches the support status so the popup
+ * has an easier time getting the information
+ * @type {TabState}
+ */
+let activeTabState = TabState.NOT_SUPPORTED;
+
+/**
+ * Whenever the active tab changes this caches the origin so the popup has an
+ * easier time getting the information
+ * @type {string}
+ */
+let activeOrigin = null;
+
 
 // ## Entry Point
 
 (function main() {
   browser.tabs.onUpdated.addListener(onTabUpdated);
-  browser.browserAction.onClicked.addListener(onBrowserActionClicked);
   browser.runtime.onMessage.addListener(onMessage);
 })();
 
@@ -149,32 +182,28 @@ function onTabUpdated(tabId, changeInfo, tab) {
   ]).then((results) => {
     const [permission, approved, injected] = results;
 
-    let iconState = IconState.NOT_SUPPORTED;
+    let iconState = TabState.NOT_SUPPORTED;
 
     if (permission && !approved && injected) {
       // todo: they must have revoked the permission. give them some context in
       // the popup, as well as a reload page button
-      iconState = IconState.NEEDS_REFRESH;
+      iconState = TabState.NEEDS_REFRESH;
     } else if (permission && !approved && !injected) {
-      iconState = IconState.NEEDS_PERMISSION;
+      iconState = TabState.NEEDS_PERMISSION;
     } else if (permission && approved && !injected) {
       insertScripts(permission, tabId);
-      iconState = IconState.SUPPORTED;
+      iconState = TabState.SUPPORTED;
     } else if (permission && approved && injected) {
-      iconState = IconState.SUPPORTED;
+      iconState = TabState.SUPPORTED;
     }
 
     // The icon should always reflect the active tab
     if (tab.active) {
       updateIcon(iconState);
+      activeTabState = iconState;
+      activeOrigin = origin;
     }
   });
-}
-
-function onBrowserActionClicked() {
-  // todo: a nice popup page with a button that loads the options. this page
-  //  can also tell the user if the current site is supported
-  browser.runtime.openOptionsPage();
 }
 
 /**
@@ -183,9 +212,12 @@ function onBrowserActionClicked() {
  * @param {function()} sendResponse
  */
 function onMessage(request, sender, sendResponse) {
-  switch(request.msg) {
+  switch (request.msg) {
   case 'GET v1/options/config':
     sendResponse(getOptionsConfig());
+    break;
+  case 'GET v1/popup/config':
+    sendResponse(getPopupConfig());
     break;
   }
 }
@@ -193,9 +225,7 @@ function onMessage(request, sender, sendResponse) {
 
 // ## Message Server
 
-/**
- * @returns {OptionsConfig}
- */
+/** @returns {OptionsConfig} */
 function getOptionsConfig() {
   return {
     sites: CONTENT_SCRIPTS.map((entry) => {
@@ -205,6 +235,14 @@ function getOptionsConfig() {
         permission: entry.matches,
       };
     }),
+  };
+}
+
+/** @returns {PopupConfig} */
+function getPopupConfig() {
+  return {
+    origin: activeOrigin,
+    tabState: activeTabState,
   };
 }
 
@@ -235,7 +273,7 @@ function queryForApproved(permission) {
  */
 function queryForInjected(tabId) {
   return new Promise((resolve) => {
-    browser.tabs.sendMessage(tabId, { v : 1 }).then((loaded) => {
+    browser.tabs.sendMessage(tabId, { v: 1 }).then((loaded) => {
       resolve(!!loaded);
     }).catch(() => {
       resolve(false);
@@ -244,25 +282,25 @@ function queryForInjected(tabId) {
 }
 
 /**
- * @param {IconState} iconState
+ * @param {TabState} tabState
  */
-function updateIcon(iconState) {
+function updateIcon(tabState) {
   let badgeText = null; // falsey text 'hides' the badge entirely
   let badgeColor = null; // default color is red
   let colorIcon = true;
 
-  switch (iconState) {
-  case IconState.SUPPORTED:
+  switch (tabState) {
+  case TabState.SUPPORTED:
     break;
-  case IconState.NEEDS_PERMISSION:
+  case TabState.NEEDS_PERMISSION:
     badgeText = '✚';
     badgeColor = [0, 217, 0, 255];
     break;
-  case IconState.NEEDS_REFRESH:
+  case TabState.NEEDS_REFRESH:
     badgeText = '!';
     break;
   default:
-  case IconState.NOT_SUPPORTED:
+  case TabState.NOT_SUPPORTED:
     colorIcon = false;
     break;
   }

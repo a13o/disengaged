@@ -1,0 +1,11 @@
+html, body {
+	min-width: 250px;
+}
+
+body {
+  margin: 0 1em 1em 1em;
+}
+
+.hidden {
+  display: none;
+}

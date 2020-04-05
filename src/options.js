@@ -1,16 +1,5 @@
 /* global browser */
 
-/**
- * @typedef {Object} OptionsConfigSites
- * @property {string} id
- * @property {string} displayName
- * @property {string} permission
- */
-
-/**
- * @typedef {Object} OptionsConfig
- * @property {OptionsConfigSites[]} sites
- */
 
 // ## Local State
 
