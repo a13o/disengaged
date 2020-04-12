@@ -16,8 +16,15 @@
     }
   },
   "browser_action": {
+    "browser_style": true,
+    "default_popup": "src/popup.html",
     "default_icon": "icons/icon_48_on.png",
     "default_title": "Disengaged"
+  },
+  "options_ui": {
+    "page": "src/options.html",
+    "open_in_tab": true,
+    "browser_style": true
   },
   "background": {
     "scripts": [
@@ -25,9 +32,12 @@
     ]
   },
   "permissions": [
-    "*://*.youtube.com/*",
-    "*://*.twitter.com/*",
+    "tabs"
+  ],
+  "optional_permissions": [
     "*://*.news.ycombinator.com/*",
-    "*://*.reddit.com/*"
+    "*://*.reddit.com/*",
+    "*://*.twitter.com/*",
+    "*://*.youtube.com/*"
   ]
 }

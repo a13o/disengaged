@@ -1,0 +1,16 @@
+html, body {
+  min-width: 250px;
+  max-width: 250px;
+}
+
+body {
+  margin: 0 1em 1em 1em;
+}
+
+.hidden {
+  display: none;
+}
+
+#needs-refresh {
+  color: darkred;
+}
