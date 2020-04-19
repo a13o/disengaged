@@ -47,7 +47,7 @@ This project uses [mozilla/web-ext](https://github.com/mozilla/web-ext) for a ni
 
 ### Chrome Development
 
-Chrome is not yet supported. The web-ext tool is compatible with Chrome, but the extension currently uses a `browser` API which is proprietary to Firefox.
+Chrome is not yet supported. The web-ext tool is compatible with Chrome, and the extension is transitioned to cross-platform APIs, so it should be possible to contribute Chrome support if desired.
 
 ### Windows Troubleshooting
 
