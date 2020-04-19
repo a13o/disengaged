@@ -45,7 +45,6 @@ const CONTENT_SCRIPTS = [
     name: 'YouTube',
     matches: '*://*.youtube.com/*',
     excludeMatches: [
-      '*://*.gaming.youtube.com/*',
       '*://*.music.youtube.com/*'
     ],
     allFrames: true,
@@ -59,19 +58,6 @@ const CONTENT_SCRIPTS = [
       'remove-subscribers.css',
       'remove-suggested-videos.css',
       'remove-suggested-videos.js',
-      'remove-view-count.css',
-      'remove-votes.css'
-    ]
-  },
-  {
-    name: 'YouTube Gaming',
-    matches: '*://*.gaming.youtube.com/*',
-    allFrames: true,
-    folder: 'src/youtube-gaming',
-    files: [
-      'remove-deep-comments.css',
-      'remove-infinite-comments.css',
-      'remove-live-views.css',
       'remove-view-count.css',
       'remove-votes.css'
     ]
