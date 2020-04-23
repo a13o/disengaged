@@ -1,9 +1,9 @@
 {
   "manifest_version": 2,
-  "name": "Disengaged - an Addiction Blocker",
-  "short_name": "Disengaged",
+  "name": "Disengaged - TESTING SLASH COMMAND BUILDS",
+  "short_name": "Disengaged - TEST BUILDS",
   "version": "0.3.0",
-  "description": "The internet sux rn so I deleted the bad parts",
+  "description": "I'M TESTING SLASH COMMANDS",
   "homepage_url": "https://github.com/a13o/disengaged",
   "icons": {
     "48": "icons/icon_48_on.png",
