@@ -120,7 +120,6 @@ function updateChangeset($checkbox) {
   } else {
     insertArr.push(site.permission);
   }
-  console.log(unsavedArr, insertArr);
 }
 
 function updateSaveAbility() {

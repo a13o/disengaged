@@ -35,7 +35,11 @@ function buildDocument() {
 
   const optionsBtn = document.getElementById('show-options');
   optionsBtn.addEventListener('click', () => {
-    browser.runtime.openOptionsPage();
+    browser.runtime.openOptionsPage()
+      .catch((error) => {
+        // eslint-disable-next-line no-console
+        console.log('Failed to open options page:', error);
+      });
   });
 }
 
