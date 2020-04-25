@@ -20,6 +20,6 @@
   },
   "homepage": "https://github.com/a13o/disengaged#readme",
   "devDependencies": {
-    "web-ext": "^4.1.0"
+    "web-ext": "^4.2.0"
   }
 }
