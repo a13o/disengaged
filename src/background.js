@@ -44,9 +44,6 @@ const CONTENT_SCRIPTS = [
   {
     name: 'YouTube',
     matches: '*://*.youtube.com/*',
-    excludeMatches: [
-      '*://*.music.youtube.com/*'
-    ],
     allFrames: true,
     folder: 'src/youtube',
     files: [
@@ -60,16 +57,6 @@ const CONTENT_SCRIPTS = [
       'remove-suggested-videos.js',
       'remove-view-count.css',
       'remove-votes.css'
-    ]
-  },
-  {
-    name: 'YouTube Music',
-    matches: '*://*.music.youtube.com/*',
-    allFrames: true,
-    folder: 'src/youtube-music',
-    files: [
-      'remove-view-count.css',
-      'remove-view-count.js'
     ]
   },
   {
