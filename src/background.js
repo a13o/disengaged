@@ -332,6 +332,7 @@ function insertScripts(hostPermission, tabId) {
 
   GLOBAL_SCRIPTS
     .map(file => browser.tabs.executeScript(tabId, {
+      allFrames: siteData.allFrames,
       file,
     }));
 
