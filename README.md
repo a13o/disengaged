@@ -1,3 +1,5 @@
+> :warning: Since Firefox Mobile and Chrome have both abandoned Manifest V2, the WebExtensions API has become too fractured to maintain this project.
+
 # Disengaged
 
 Do you want a healthier internet?
